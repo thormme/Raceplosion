@@ -1,33 +1,25 @@
 #include <zenilib.h>
-#include "Body.h"
+#include "Actor.h"
 
-class Actor : Body {
-
-private:
-	Zeni::Point2f m_position; // Upper left corner
-	Zeni::Vector2f m_size; // (width, height)
-	bool active;
-	
-	// Causes the actor to take an action.
-	void run() {
+// Causes the actor to take an action.
+void Actor::run() {
 		
-	}
+}
 
-public:
-	Actor(const Zeni::Point2f &position_,
-			const Zeni::Vector2f &size_)
-			: m_position(position_),
-			m_size(size_) {
-		active = true;
-	}
+Actor::Actor(const Zeni::Point2f &position,
+		const Zeni::Vector2f &size,
+		const double rotation)
+		: Body(position, size, rotation) {
+	m_active = true;
+}
 
-	void act() {
-		if (active) {
-			run();
-		}
-		active = false;
+void Actor::act() {
+	if (m_active) {
+		run();
 	}
+	//m_active = false;
+	m_active = true;
+}
 
-	// If you might delete base class pointers, you need a virtual destructor.
-	virtual ~Actor() {}
-};
+// If you might delete base class pointers, you need a virtual destructor.
+Actor::~Actor() {}

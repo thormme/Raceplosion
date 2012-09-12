@@ -5,8 +5,25 @@
 
 # Compiled Dynamic libraries
 *.so
-
 # Compiled Static libraries
 *.lai
 *.la
 *.a
+/bin/
+/build/
+/dev/
+/docs/
+/game.app/
+/lib/
+/Resources/
+/Doxyfile
+/Info.plist
+/Info_d.plist
+/Play game x32.exe
+/Play game x64.exe
+/game_x32
+/game_x64
+/multi-build_sh.bat
+/multi-clean_sh.bat
+/multi-premake_sh.bat
+/premake4.lua
