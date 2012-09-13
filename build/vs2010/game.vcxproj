@@ -340,9 +340,6 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
     </ClCompile>
     <ClCompile Include="..\..\jni\application\Input.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

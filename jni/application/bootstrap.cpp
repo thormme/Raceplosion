@@ -25,6 +25,7 @@ public:
   : m_playa(), 
     m_timePassed(0.0f) {
     set_pausable(true);
+	m_chronometer.start();
   }
 
 private:
