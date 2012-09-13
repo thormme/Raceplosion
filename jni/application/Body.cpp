@@ -2,11 +2,44 @@
 
 Body::Body(const Zeni::Point2f &position,
 		const Zeni::Vector2f &size,
-		const double rotation):m_position(position), m_size(size), m_rotation(rotation) {
+		const double rotation,
+		const Zeni::String image,
+		const Zeni::Vector2f &velocity,
+		const Zeni::Vector2f &acceleration)
+		:m_position(position), m_size(size), m_rotation(rotation), m_image(image), m_velocity(position), m_acceleration(position) {
 
 }
 
 Body::~Body() {
+}
+
+void Body::render() {
+	render_image(
+      m_image, // which texture to use
+      m_position, // upper-left corner
+      m_position + m_size, // lower-right corner
+      m_rotation, // rotation in radians
+      1.0f, // scaling factor
+      m_position + 0.5f * m_size, // point to rotate & scale about
+      false, // whether or not to horizontally flip the texture
+      Zeni::Color()); // what Color to "paint" the texture
+}
+
+void Body::stepPhysics(const double timeStep) {
+	m_velocity += m_acceleration * timeStep;
+	m_position += m_velocity * timeStep;
+}
+
+void Body::setPosition(Zeni::Point2f position) {
+	m_position = position;
+}
+
+void Body::setVelocity(Zeni::Vector2f velocity) {
+	m_velocity = velocity;
+}
+
+void Body::setAcceleration(Zeni::Vector2f acceleration) {
+	m_acceleration = acceleration;
 }
 
 const Zeni::Point2f Body::getPosition() {

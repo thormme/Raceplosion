@@ -5,6 +5,8 @@
  */
 
 #include <zenilib.h>
+#include "Actor.h"
+#include "Input.h"
 
 #if defined(_DEBUG) && defined(_WINDOWS)
 #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
@@ -19,11 +21,26 @@ class Play_State : public Gamestate_Base {
   Play_State operator=(const Play_State &);
 
 public:
-  Play_State() {
+  Play_State()
+  : m_playa(), 
+    m_timePassed(0.0f) {
     set_pausable(true);
   }
 
 private:
+  Actor m_playa;
+  Chronometer<Time> m_chronometer;
+  float m_timePassed;
+
+  void perform_logic() {
+    const float timePassed = m_chronometer.seconds();
+    const float timeStep = timePassed - m_timePassed;
+    m_timePassed = timePassed;
+
+	m_playa.stepPhysics(timeStep);
+    m_playa.act();
+  }
+
   void on_push() {
     //get_Window().mouse_grab(true);
     get_Window().mouse_hide(true);
@@ -35,6 +52,19 @@ private:
     get_Window().mouse_hide(false);
     //get_Game().joy_mouse.enabled = true;
   }
+
+  void on_key(const SDL_KeyboardEvent &event) {
+	  if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
+		  Input::updateKey(event.keysym.sym, event.type == SDL_KEYDOWN);
+	  }
+  }
+
+  void render() {
+    get_Video().set_2d();
+
+    m_playa.render();
+  }
+
 };
 
 class Instructions_State : public Widget_Gamestate {
