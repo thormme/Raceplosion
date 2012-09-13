@@ -12,6 +12,8 @@ private:
 	Zeni::Vector2f m_velocity;
 	Zeni::Vector2f m_acceleration;
 
+	double m_rotationRate; // Radians per second
+
 public:
 	Body(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
 		 const Zeni::Vector2f &size = Zeni::Vector2f(32.0f, 32.0f),
@@ -23,13 +25,17 @@ public:
 	// Render the body.
 	void render();
 	// Run the physics simulation on this object for one step.
-	void stepPhysics(const double timeStep);
+	virtual void stepPhysics(const double timeStep);
 
 	void setPosition(Zeni::Point2f position);
 	void setVelocity(Zeni::Vector2f velocity);
 	void setAcceleration(Zeni::Vector2f acceleration);
+	void setRotation(double rotation);
+	void setRotationRate(double rotationRate);
 	
 	const Zeni::Point2f getPosition();
+	const Zeni::Vector2f Body::getVelocity();
+	const Zeni::Vector2f Body::getAcceleration();
 	const bool isTouching(const Body &body);
 	const double getRotation();
 

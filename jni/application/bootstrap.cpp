@@ -5,6 +5,7 @@
  */
 
 #include <zenilib.h>
+#include "RaceCar.h"
 #include "Actor.h"
 #include "Input.h"
 
@@ -29,7 +30,7 @@ public:
   }
 
 private:
-  Actor m_playa;
+  RaceCar m_playa;
   Chronometer<Time> m_chronometer;
   float m_timePassed;
 
@@ -58,6 +59,7 @@ private:
 	  if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
 		  Input::updateKey(event.keysym.sym, event.type == SDL_KEYDOWN);
 	  }
+	  Gamestate_Base::on_key(event);
   }
 
   void render() {

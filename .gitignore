@@ -26,8 +26,11 @@
 /multi-clean_sh.bat
 /multi-premake_sh.bat
 /premake4.lua
-
 # Include Solution
 !/build/vs2010/game.vcxproj
 !/build/vs2010/game.vcxproj.filters
 !/build/vs2010/zenilib.sdf
+/Play game x32 Debug.exe
+/Play game x32 Debug.idb
+/Play game x32 Debug.ilk
+/play game x32 debug.pdb

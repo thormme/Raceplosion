@@ -8,8 +8,9 @@ class Actor : public Body {
 private:
 	bool m_active;
 	
+protected:
 	// Causes the actor to take an action.
-	void run();
+	virtual void run();
 
 public:
 	Actor(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
