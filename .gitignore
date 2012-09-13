@@ -10,7 +10,6 @@
 *.la
 *.a
 /bin/
-/build/
 /dev/
 /docs/
 /game.app/
@@ -27,3 +26,8 @@
 /multi-clean_sh.bat
 /multi-premake_sh.bat
 /premake4.lua
+
+# Include Solution
+!/build/vs2010/game.vcxproj
+!/build/vs2010/game.vcxproj.filters
+!/build/vs2010/zenilib.sdf
