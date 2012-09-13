@@ -22,18 +22,18 @@ void RaceCar::run() {
 	}
 
 	if (Input::isKeyDown(SDLK_LEFT)) {
-		setRotationRate(-1.5);
+		setRotationRate(-2);
 	}
 
 	if (Input::isKeyDown(SDLK_RIGHT)) {
-		setRotationRate(1.5);
+		setRotationRate(2);
 	}
 }
 
 void RaceCar::stepPhysics(const double timeStep) {
 	Zeni::Vector2f directionVector(cos(getRotation()), sin(getRotation()));
 	Zeni::Vector2f perpendicularVelocity = getVelocity() - (getVelocity() * directionVector) / directionVector.magnitude() * directionVector;
-	setAcceleration(getAcceleration() - perpendicularVelocity*1.5);
+	setAcceleration(getAcceleration() - perpendicularVelocity*3);
 	/*std::ostringstream str;
 	str << perpendicularVelocity.x << " " << perpendicularVelocity.y << "\n";
 	OutputDebugString( str.str().c_str());*/
@@ -43,7 +43,7 @@ void RaceCar::stepPhysics(const double timeStep) {
 RaceCar::RaceCar(const Zeni::Point2f &position,
 		const double rotation,
 		const Zeni::String image)
-		: Actor(position, Zeni::Vector2f(128.0f, 64.0f), rotation, image, Zeni::Vector2f(0.0f, 0.0f), Zeni::Vector2f(0.0f, 0.0f)) {
+		: Actor(position, Zeni::Vector2f(64.0f, 32.0f), rotation, image, Zeni::Vector2f(0.0f, 0.0f), Zeni::Vector2f(0.0f, 0.0f)) {
 }
 
 // If you might delete base class pointers, you need a virtual destructor.
