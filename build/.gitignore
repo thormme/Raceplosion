@@ -1,0 +1,6 @@
+*
+!*/
+!.gitignore
+!game.vcxproj
+!game.vcxproj.filters
+!zenilib.sdf
