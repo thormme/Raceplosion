@@ -33,7 +33,7 @@ void RaceCar::run() {
 void RaceCar::stepPhysics(const double timeStep) {
 	Zeni::Vector2f directionVector(cos(getRotation()), sin(getRotation()));
 	Zeni::Vector2f perpendicularVelocity = getVelocity() - (getVelocity() * directionVector) / directionVector.magnitude() * directionVector;
-	setAcceleration(getAcceleration() - perpendicularVelocity*3);
+	setAcceleration(getAcceleration() - perpendicularVelocity.normalized()*500);
 	/*std::ostringstream str;
 	str << perpendicularVelocity.x << " " << perpendicularVelocity.y << "\n";
 	OutputDebugString( str.str().c_str());*/

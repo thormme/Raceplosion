@@ -2,8 +2,8 @@
 
 Body::Body(const Zeni::Point2f &position,
 		const Zeni::Vector2f &size,
-		const double rotation,
-		const Zeni::String image,
+		const double &rotation,
+		const Zeni::String &image,
 		const Zeni::Vector2f &velocity,
 		const Zeni::Vector2f &acceleration)
 		:m_position(position), m_size(size), m_rotation(rotation), m_image(image), m_velocity(position), m_acceleration(position) {
@@ -31,23 +31,23 @@ void Body::stepPhysics(const double timeStep) {
 	m_position += m_velocity * timeStep;
 }
 
-void Body::setPosition(Zeni::Point2f position) {
+void Body::setPosition(const Zeni::Point2f position) {
 	m_position = position;
 }
 
-void Body::setVelocity(Zeni::Vector2f velocity) {
+void Body::setVelocity(const Zeni::Vector2f velocity) {
 	m_velocity = velocity;
 }
 
-void Body::setAcceleration(Zeni::Vector2f acceleration) {
+void Body::setAcceleration(const Zeni::Vector2f acceleration) {
 	m_acceleration = acceleration;
 }
 
-void Body::setRotation(double rotation) {
+void Body::setRotation(const double rotation) {
 	m_rotation = rotation;
 }
 
-void Body::setRotationRate(double rotationRate) {
+void Body::setRotationRate(const double rotationRate) {
 	m_rotationRate = rotationRate;
 }
 

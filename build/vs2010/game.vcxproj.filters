@@ -408,6 +408,12 @@
     <ClInclude Include="..\..\jni\application\RaceCar.h">
       <Filter>jni\application</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\jni\application\Level.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\jni\application\Tile.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\jni\application\bootstrap.cpp">
@@ -423,6 +429,12 @@
       <Filter>jni\application</Filter>
     </ClCompile>
     <ClCompile Include="..\..\jni\application\RaceCar.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\Level.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\Tile.cpp">
       <Filter>jni\application</Filter>
     </ClCompile>
   </ItemGroup>

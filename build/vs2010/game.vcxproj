@@ -220,7 +220,9 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
     <ClInclude Include="..\..\jni\application\Actor.h" />
     <ClInclude Include="..\..\jni\application\Body.h" />
     <ClInclude Include="..\..\jni\application\Input.h" />
+    <ClInclude Include="..\..\jni\application\Level.h" />
     <ClInclude Include="..\..\jni\application\RaceCar.h" />
+    <ClInclude Include="..\..\jni\application\Tile.h" />
     <ClInclude Include="..\..\jni\external\zenilib\zenilib.h" />
     <ClInclude Include="..\..\jni\external\zenilib\zeni_core\android_native_app_glue.h" />
     <ClInclude Include="..\..\jni\external\zenilib\zeni_core\zeni_core.h" />
@@ -340,7 +342,9 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
     <ClCompile Include="..\..\jni\application\bootstrap.cpp">
     </ClCompile>
     <ClCompile Include="..\..\jni\application\Input.cpp" />
+    <ClCompile Include="..\..\jni\application\Level.cpp" />
     <ClCompile Include="..\..\jni\application\RaceCar.cpp" />
+    <ClCompile Include="..\..\jni\application\Tile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

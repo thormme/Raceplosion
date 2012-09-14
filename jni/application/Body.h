@@ -17,8 +17,8 @@ private:
 public:
 	Body(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
 		 const Zeni::Vector2f &size = Zeni::Vector2f(32.0f, 32.0f),
-		 const double rotation = 0.0f,
-		 const Zeni::String image = "placeholder",
+		 const double &rotation = 0.0f,
+		 const Zeni::String &image = "placeholder",
 		 const Zeni::Vector2f &velocity = Zeni::Vector2f(0.0f, 0.0f),
 		 const Zeni::Vector2f &acceleration = Zeni::Vector2f(0.0f, 0.0f));
 
@@ -27,11 +27,11 @@ public:
 	// Run the physics simulation on this object for one step.
 	virtual void stepPhysics(const double timeStep);
 
-	void setPosition(Zeni::Point2f position);
-	void setVelocity(Zeni::Vector2f velocity);
-	void setAcceleration(Zeni::Vector2f acceleration);
-	void setRotation(double rotation);
-	void setRotationRate(double rotationRate);
+	void setPosition(const Zeni::Point2f position);
+	void setVelocity(const Zeni::Vector2f velocity);
+	void setAcceleration(const Zeni::Vector2f acceleration);
+	void setRotation(const double rotation);
+	void setRotationRate(const double rotationRate);
 	
 	const Zeni::Point2f getPosition();
 	const Zeni::Vector2f Body::getVelocity();

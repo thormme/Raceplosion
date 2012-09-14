@@ -5,6 +5,7 @@
  */
 
 #include <zenilib.h>
+#include <sstream>
 #include "RaceCar.h"
 #include "Actor.h"
 #include "Input.h"
@@ -41,6 +42,10 @@ private:
 
 	m_playa.stepPhysics(timeStep);
     m_playa.act();
+
+	/*std::ostringstream str;
+	str << 1.0/timeStep << "\n";
+    OutputDebugString( str.str().c_str());*/
   }
 
   void on_push() {
