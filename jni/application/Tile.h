@@ -5,7 +5,7 @@
 class Tile {
 
 private:
-	Zeni::Point2f m_position;
+	Zeni::Point2f m_position; // Tile position in level coordinates
 	Zeni::String m_image; // Name of the image to draw
 
 public:

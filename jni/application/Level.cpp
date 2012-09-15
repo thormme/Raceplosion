@@ -1,11 +1,12 @@
 #include <zenilib.h>
+#include <vector>
 #include "Level.h"
 #include "Tile.h"
 
 
-Level::Level(Zeni::String fileName) {
+//Level::Level(Zeni::String fileName) {
 	//m_tiles
-}
+//}
 
 // If you might delete base class pointers, you need a virtual destructor.
 /*virtual Level::~Level();

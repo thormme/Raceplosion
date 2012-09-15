@@ -1,15 +1,17 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 #include <zenilib.h>
+#include <vector>
 #include "Tile.h"
 
 class Level {
 
 private:
-	stl::vector<stl::vector<Tile*>> m_tiles;
+	std::vector< std::vector<Tile> > m_tiles;
+	Zeni::Vector2f size;
 
 public:
-	Level(Zeni::String fileName);
+	Level(const Zeni::String fileName);
 
 	// If you might delete base class pointers, you need a virtual destructor.
 	virtual ~Level();
