@@ -5,9 +5,9 @@
 // Causes the actor to take an action.
 void Actor::run() {
 	if (Input::isKeyDown(SDLK_DOWN)) {
-		setAcceleration(Zeni::Vector2f(100.0f, 100.0f));
+		setForce(Zeni::Vector2f(100.0f, 100.0f));
 	} else {
-		setAcceleration(Zeni::Vector2f(0.0f, 0.0f));
+		setForce(Zeni::Vector2f(0.0f, 0.0f));
 	}
 }
 
@@ -16,8 +16,9 @@ Actor::Actor(const Zeni::Point2f &position,
 		const double rotation,
 		const Zeni::String image,
 		const Zeni::Vector2f &velocity,
-		const Zeni::Vector2f &acceleration)
-		: Body(position, size, rotation, image, velocity, acceleration) {
+		const Zeni::Vector2f &force,
+		const double &mass)
+		: Body(position, size, rotation, image, velocity, force, mass) {
 	m_active = true;
 }
 

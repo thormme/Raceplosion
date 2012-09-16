@@ -1,3 +1,4 @@
+#include <zenilib.h>
 #include "Body.h"
 
 Body::Body(const Zeni::Point2f &position,
@@ -5,8 +6,9 @@ Body::Body(const Zeni::Point2f &position,
 		const double &rotation,
 		const Zeni::String &image,
 		const Zeni::Vector2f &velocity,
-		const Zeni::Vector2f &acceleration)
-		:m_position(position), m_size(size), m_rotation(rotation), m_image(image), m_velocity(position), m_acceleration(position) {
+		const Zeni::Vector2f &force,
+		const double &mass)
+		:m_position(position), m_size(size), m_rotation(rotation), m_image(image), m_velocity(velocity), m_force(force), m_mass(mass) {
 	m_rotationRate = 0;
 }
 
@@ -27,7 +29,8 @@ void Body::render() {
 
 void Body::stepPhysics(const double timeStep) {
 	m_rotation += m_rotationRate * timeStep;
-	m_velocity += m_acceleration * timeStep;
+	Zeni::Vector2f acceleration = m_force / m_mass;
+	m_velocity += acceleration * timeStep;
 	m_position += m_velocity * timeStep;
 }
 
@@ -39,8 +42,8 @@ void Body::setVelocity(const Zeni::Vector2f velocity) {
 	m_velocity = velocity;
 }
 
-void Body::setAcceleration(const Zeni::Vector2f acceleration) {
-	m_acceleration = acceleration;
+void Body::setForce(const Zeni::Vector2f force) {
+	m_force = force;
 }
 
 void Body::setRotation(const double rotation) {
@@ -59,8 +62,12 @@ const Zeni::Vector2f Body::getVelocity() {
 	return m_velocity;
 }
 
-const Zeni::Vector2f Body::getAcceleration() {
-	return m_acceleration;
+const Zeni::Vector2f Body::getForce() {
+	return m_force;
+}
+
+const double Body::getMass() {
+	return m_mass;
 }
 
 // TODO: implement

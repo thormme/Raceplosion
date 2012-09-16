@@ -6,6 +6,7 @@
 class RaceCar : public Actor {
 
 private:
+	const Zeni::Vector2f getHorizontalFrictionForce();
 
 protected:
 	virtual void run();
@@ -17,7 +18,6 @@ public:
 
 	virtual void stepPhysics(const double timeStep);
 
-	// If you might delete base class pointers, you need a virtual destructor.
 	virtual ~RaceCar();
 };
 #endif

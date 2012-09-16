@@ -6,6 +6,7 @@
 
 #include <zenilib.h>
 #include <sstream>
+#include "Level.h"
 #include "RaceCar.h"
 #include "Actor.h"
 #include "Input.h"
@@ -25,12 +26,14 @@ class Play_State : public Gamestate_Base {
 public:
   Play_State()
   : m_playa(), 
-    m_timePassed(0.0f) {
+    m_timePassed(0.0f),
+	m_level() {
     set_pausable(true);
 	m_chronometer.start();
   }
 
 private:
+  Level m_level;
   RaceCar m_playa;
   Chronometer<Time> m_chronometer;
   float m_timePassed;
@@ -70,6 +73,7 @@ private:
   void render() {
     get_Video().set_2d();
 
+	m_level.render();
     m_playa.render();
   }
 
@@ -123,7 +127,7 @@ class Bootstrap {
       get_Sounds();
       get_Game().joy_mouse.enabled = true;
 
-      return new Title_State<Play_State, Instructions_State>("Zenipex Library\nApplication");
+      return new Title_State<Play_State, Instructions_State>("Raceplosion!");
     }
   } m_goi;
 
