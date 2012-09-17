@@ -15,7 +15,7 @@ public:
 	// If you might delete base class pointers, you need a virtual destructor.
 	virtual ~Tile();
 
-	Zeni::String getImage();
-	Zeni::Point2f getPosition();
+	const Zeni::String getImage() const;
+	const Zeni::Point2f getPosition() const;
 };
 #endif

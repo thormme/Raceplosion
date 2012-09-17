@@ -1,6 +1,7 @@
 #ifndef BODY_H
 #define BODY_H
 #include <zenilib.h>
+#include "Tile.h"
 
 class Body {
 
@@ -36,13 +37,15 @@ public:
 	void setRotation(const double rotation);
 	void setRotationRate(const double rotationRate);
 	
-	const Zeni::Point2f getPosition();
-	const Zeni::Vector2f Body::getVelocity();
-	const Zeni::Vector2f Body::getAcceleration();
-	const Zeni::Vector2f Body::getForce();
-	const double getMass();
-	const bool isTouching(const Body &body);
-	const double getRotation();
+	const Zeni::Point2f getPosition() const;
+	const Zeni::Vector2f getSize() const;
+	const Zeni::Vector2f getVelocity() const;
+	const Zeni::Vector2f getAcceleration() const;
+	const Zeni::Vector2f getForce() const;
+	const double getMass() const;
+	const bool isTouching(const Body &body) const;
+	const bool isTouching(const Zeni::Point2f &position, const Zeni::Vector2f &size) const;
+	const double getRotation() const;
 
 	virtual ~Body();
 };

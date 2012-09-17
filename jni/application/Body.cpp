@@ -1,5 +1,7 @@
 #include <zenilib.h>
 #include "Body.h"
+#include "Tile.h"
+#include "Level.h"
 
 Body::Body(const Zeni::Point2f &position,
 		const Zeni::Vector2f &size,
@@ -54,27 +56,48 @@ void Body::setRotationRate(const double rotationRate) {
 	m_rotationRate = rotationRate;
 }
 
-const Zeni::Point2f Body::getPosition() {
+const Zeni::Point2f Body::getPosition() const {
 	return m_position;
 }
 
-const Zeni::Vector2f Body::getVelocity() {
+const Zeni::Vector2f Body::getSize() const {
+	return m_size;
+}
+
+const Zeni::Vector2f Body::getVelocity() const {
 	return m_velocity;
 }
 
-const Zeni::Vector2f Body::getForce() {
+const Zeni::Vector2f Body::getForce() const {
 	return m_force;
 }
 
-const double Body::getMass() {
+const double Body::getMass() const {
 	return m_mass;
 }
 
 // TODO: implement
-const bool Body::isTouching(const Body &body) {
-	return false;
+const bool Body::isTouching(const Body &body) const {
+	// Radius test
+	Zeni::Point2f bodyCenter = body.getSize()/2.0 + body.getPosition();
+	Zeni::Point2f center = getSize()/2.0 + getPosition();
+	double distance = (center - bodyCenter).magnitude();
+	return distance < (body.getSize()/2.0 + getSize()/2.0).magnitude();
 }
 
-const double Body::getRotation() {
+const bool Body::isTouching(const Zeni::Point2f &position, const Zeni::Vector2f &size) const {
+	// Radius bounding box test
+	Zeni::Point2f center = getSize()/2.0 + getPosition();
+	double boundingRadius = (getSize()/2.0).magnitude();
+	if (position.x > center.x + boundingRadius ||
+		position.y > center.y + boundingRadius ||
+		position.x + size.i < center.x ||
+		position.y + size.j < center.y) {
+		return false;
+	}
+	return true;
+}
+
+const double Body::getRotation() const {
 	return m_rotation;
 }

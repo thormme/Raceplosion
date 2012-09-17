@@ -5,11 +5,7 @@
  */
 
 #include <zenilib.h>
-#include <sstream>
-#include "Level.h"
-#include "RaceCar.h"
-#include "Actor.h"
-#include "Input.h"
+#include "PlayState.h"
 
 #if defined(_DEBUG) && defined(_WINDOWS)
 #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
@@ -18,66 +14,6 @@
 
 using namespace std;
 using namespace Zeni;
-
-class Play_State : public Gamestate_Base {
-  Play_State(const Play_State &);
-  Play_State operator=(const Play_State &);
-
-public:
-  Play_State()
-  : m_playa(), 
-    m_timePassed(0.0f),
-	m_level() {
-    set_pausable(true);
-	m_chronometer.start();
-  }
-
-private:
-  Level m_level;
-  RaceCar m_playa;
-  Chronometer<Time> m_chronometer;
-  float m_timePassed;
-
-  void perform_logic() {
-    const float timePassed = m_chronometer.seconds();
-    const float timeStep = timePassed - m_timePassed;
-    m_timePassed = timePassed;
-
-	m_playa.stepPhysics(timeStep);
-    m_playa.act();
-
-	/*std::ostringstream str;
-	str << 1.0/timeStep << "\n";
-    OutputDebugString( str.str().c_str());*/
-  }
-
-  void on_push() {
-    //get_Window().mouse_grab(true);
-    get_Window().mouse_hide(true);
-    //get_Game().joy_mouse.enabled = false;
-  }
-
-  void on_pop() {
-    //get_Window().mouse_grab(false);
-    get_Window().mouse_hide(false);
-    //get_Game().joy_mouse.enabled = true;
-  }
-
-  void on_key(const SDL_KeyboardEvent &event) {
-	  if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-		  Input::updateKey(event.keysym.sym, event.type == SDL_KEYDOWN);
-	  }
-	  Gamestate_Base::on_key(event);
-  }
-
-  void render() {
-    get_Video().set_2d();
-
-	m_level.render();
-    m_playa.render();
-  }
-
-};
 
 class Instructions_State : public Widget_Gamestate {
   Instructions_State(const Instructions_State &);
@@ -118,7 +54,7 @@ private:
 class Bootstrap {
   class Gamestate_One_Initializer : public Gamestate_Zero_Initializer {
     virtual Gamestate_Base * operator()() {
-      Window::set_title("zenilib Application");
+      Window::set_title("Raceplosion");
 
       get_Joysticks();
       get_Video();
@@ -127,7 +63,7 @@ class Bootstrap {
       get_Sounds();
       get_Game().joy_mouse.enabled = true;
 
-      return new Title_State<Play_State, Instructions_State>("Raceplosion!");
+      return new Title_State<PlayState, Instructions_State>("Raceplosion!");
     }
   } m_goi;
 

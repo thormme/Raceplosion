@@ -10,7 +10,7 @@ private:
 	
 protected:
 	
-	virtual void run(); ///< Causes the actor to take an action.
+	virtual void run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions); ///< Causes the actor to take an action.
 
 public:
 	Actor(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
@@ -21,7 +21,7 @@ public:
 		 const Zeni::Vector2f &acceleration = Zeni::Vector2f(0.0f, 0.0f),
 		 const double &mass = 1.0);
 
-	void act();
+	void act(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);
 
 	virtual ~Actor();
 };

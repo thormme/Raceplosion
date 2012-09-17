@@ -3,7 +3,7 @@
 #include "Input.h"
 
 // Causes the actor to take an action.
-void Actor::run() {
+void Actor::run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
 	if (Input::isKeyDown(SDLK_DOWN)) {
 		setForce(Zeni::Vector2f(100.0f, 100.0f));
 	} else {
@@ -22,9 +22,9 @@ Actor::Actor(const Zeni::Point2f &position,
 	m_active = true;
 }
 
-void Actor::act() {
+void Actor::act(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
 	if (m_active) {
-		run();
+		run(tileCollisions, bodyCollisions);
 	}
 	//m_active = false;
 	m_active = true;

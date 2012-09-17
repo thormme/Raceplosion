@@ -3,13 +3,13 @@
 #include <zenilib.h>
 #include <vector>
 #include "Tile.h"
+#include "Body.h"
 
 class Level {
 
 private:
 	std::vector< std::vector<Tile*> > m_tiles;
 	std::vector< std::string > m_tileTypes;
-	std::multimap< std::string, Tile* > m_tileGroups;
 	Zeni::Vector2f m_size;
 	Zeni::Vector2f m_tileSize;
 
@@ -20,7 +20,9 @@ public:
 
 	virtual ~Level();
 
-	void render(); ///< Render the level tiles
+	void render(Zeni::Point2f offset, Zeni::Vector2f screenSize); ///< Render the level tiles
+
+	const std::vector<Tile*> getCollidingTiles(const Body &body) const;
 
 	const Tile getTile(Zeni::Point2f position);
 };

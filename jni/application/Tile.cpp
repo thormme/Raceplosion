@@ -8,9 +8,9 @@ Tile::Tile(const Zeni::Point2f &position,
 Tile::~Tile(){
 }
 
-Zeni::String Tile::getImage() {
+const Zeni::String Tile::getImage() const {
 	return m_image;
 }
-Zeni::Point2f Tile::getPosition() {
+const Zeni::Point2f Tile::getPosition() const {
 	return m_position;
 }
