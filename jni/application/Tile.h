@@ -7,6 +7,7 @@ class Tile {
 private:
 	Zeni::Point2f m_position; // Tile position in level coordinates
 	Zeni::String m_image; // Name of the image to draw
+	long m_imageId;
 
 public:
 	Tile(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
@@ -16,6 +17,7 @@ public:
 	virtual ~Tile();
 
 	const Zeni::String getImage() const;
+	const long getImageId() const;
 	const Zeni::Point2f getPosition() const;
 };
 #endif

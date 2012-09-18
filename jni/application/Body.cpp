@@ -85,6 +85,7 @@ const bool Body::isTouching(const Body &body) const {
 	return distance < (body.getSize()/2.0 + getSize()/2.0).magnitude();
 }
 
+// TODO: implement
 const bool Body::isTouching(const Zeni::Point2f &position, const Zeni::Vector2f &size) const {
 	// Radius bounding box test
 	Zeni::Point2f center = getSize()/2.0 + getPosition();

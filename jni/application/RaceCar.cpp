@@ -40,7 +40,7 @@ void RaceCar::run(const std::vector<Tile*> &tileCollisions, const std::vector<Bo
 		m_wheelRotation = -PI/6;
 	}
 
-	if (Input::isKeyDown(SDLK_w)) {
+	if (Input::isKeyPressed(SDLK_w)) {
 		PlayState * playState = dynamic_cast<PlayState*>(&Zeni::get_Game().get_top().get());
 		playState->addBody(new RaceCar());
 	}

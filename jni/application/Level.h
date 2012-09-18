@@ -9,7 +9,7 @@ class Level {
 
 private:
 	std::vector< std::vector<Tile*> > m_tiles;
-	std::vector< std::string > m_tileTypes;
+	long m_numTextures;
 	Zeni::Vector2f m_size;
 	Zeni::Vector2f m_tileSize;
 

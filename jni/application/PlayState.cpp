@@ -72,6 +72,8 @@ void PlayState::perform_logic() {
 		}
 	}
 
+	Input::stepInput();
+
 	std::ostringstream str;
 	str << m_bodies.size() << "\n";
     OutputDebugString( str.str().c_str());
@@ -99,21 +101,18 @@ void PlayState::on_key(const SDL_KeyboardEvent &event) {
 void PlayState::render() {
 	Zeni::Video &vr = Zeni::get_Video();
 	Zeni::Point2f screenHalfResolution = Zeni::Point2f(600.0f, 500.0f);
-	vr.set_2d(std::make_pair(m_bodies[0]->getPosition() - screenHalfResolution, m_bodies[0]->getPosition() + screenHalfResolution), true);
+	int numPlayers = 1;
+	for (int playerNum = 0; playerNum < numPlayers; playerNum++) {
+		if (m_bodies.size() > playerNum) {
+			float viewHeight = 500.0f/numPlayers;
+			vr.set_2d_view(std::make_pair(m_bodies[playerNum]->getPosition() - Zeni::Point2f(600.0f, viewHeight), m_bodies[playerNum]->getPosition() + Zeni::Point2f(600.0f, viewHeight)),
+				std::make_pair(Zeni::Point2i(0.0f, (vr.get_render_target_size().y/numPlayers)*(playerNum)), Zeni::Point2i(vr.get_render_target_size().x, (vr.get_render_target_size().y/numPlayers)*(playerNum+1))), true);
+		}
 
-	m_level.render(m_bodies[0]->getPosition() - screenHalfResolution, Zeni::Vector2f(screenHalfResolution)*2);
+		if (m_bodies.size() > playerNum) m_level.render(m_bodies[playerNum]->getPosition() - screenHalfResolution, Zeni::Vector2f(screenHalfResolution)*2);
 
-    for (int i=0; i < m_bodies.size(); i++) {
-		m_bodies[i]->render();
+		for (int i=0; i < m_bodies.size(); i++) {
+			m_bodies[i]->render();
+		}
 	}
-
-	/*Zeni::Texture * tex = vr.create_Texture(Zeni::Point2i(512, 512), 0);
-	Zeni::Vertex2f_Texture p1 = Zeni::Vertex2f_Texture(Point2f(0.0f, 0.0f), Zeni::Point2f(0.0f, 0.0f));
-	Zeni::Vertex2f_Texture p2 = Zeni::Vertex2f_Texture(Point2f(0.0f, 600.0f), Zeni::Point2f(0.0f, 1.0f));
-	Zeni::Vertex2f_Texture p3 = Zeni::Vertex2f_Texture(Point2f(400.0f, 600.0f), Zeni::Point2f(1.0f, 1.0f));
-	Zeni::Vertex2f_Texture p4 = Zeni::Vertex2f_Texture(Point2f(400.0f, 0.0f), Zeni::Point2f(1.0f, 0.0f));
-	Zeni::Quadrilateral<Zeni::Vertex2f_Texture> tile = Zeni::Quadrilateral<Zeni::Vertex2f_Texture>(p1, p2, p3, p4);
-	tile.render_to(tex->apply_Texture();
-	vr.render(tile);
-	vr.unapply_Texture();*/
 }
