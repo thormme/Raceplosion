@@ -13,6 +13,8 @@ private:
 	Zeni::Vector2f m_velocity;
 	Zeni::Vector2f m_force;
 	double m_mass;
+	bool m_detectCollisionsWithTiles;
+	bool m_detectCollisionsWithBodies;
 
 	double m_rotationRate; // Radians per second
 
@@ -29,6 +31,7 @@ public:
 	void render(); ///< Render the body.
 	
 	virtual void stepPhysics(const double timeStep); ///< Run the physics simulation on this object for one step.
+	virtual void handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies); ///< Run physics necessary to deal with collisions.
 
 	void setPosition(const Zeni::Point2f position);
 	void setVelocity(const Zeni::Vector2f velocity);
@@ -36,9 +39,14 @@ public:
 	void setForce(const Zeni::Vector2f force);
 	void setRotation(const double rotation);
 	void setRotationRate(const double rotationRate);
+
+	void detectCollisionsWithTiles();
+	void detectCollisionsWithBodies();
 	
 	const Zeni::Point2f getPosition() const;
 	const Zeni::Vector2f getSize() const;
+	const std::pair<Zeni::Point2f, Zeni::Point2f> getBoundingBox() const;
+	const Zeni::Point2f getCenter() const;
 	const Zeni::Vector2f getVelocity() const;
 	const Zeni::Vector2f getAcceleration() const;
 	const Zeni::Vector2f getForce() const;
@@ -46,6 +54,8 @@ public:
 	const bool isTouching(const Body &body) const;
 	const bool isTouching(const Zeni::Point2f &position, const Zeni::Vector2f &size) const;
 	const double getRotation() const;
+	const bool willDetectCollisionsWithTiles() const;
+	const bool willDetectCollisionsWithBodies() const;
 
 	virtual ~Body();
 };

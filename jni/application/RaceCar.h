@@ -21,6 +21,7 @@ public:
 		const Zeni::String image = "race_car");
 
 	virtual void stepPhysics(const double timeStep);
+	virtual void handleCollisions(const double timeStep, std::vector<Tile*>, std::vector<Body*>); ///< Run physics necessary to deal with collisions.
 
 	virtual ~RaceCar();
 };

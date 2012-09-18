@@ -42,7 +42,7 @@ void RaceCar::run(const std::vector<Tile*> &tileCollisions, const std::vector<Bo
 
 	if (Input::isKeyPressed(SDLK_w)) {
 		PlayState * playState = dynamic_cast<PlayState*>(&Zeni::get_Game().get_top().get());
-		playState->addBody(new RaceCar());
+		playState->addBody(new RaceCar(getPosition()));
 	}
 }
 
@@ -67,11 +67,21 @@ void RaceCar::stepPhysics(const double timeStep) {
 	Actor::stepPhysics(timeStep);
 }
 
+void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies) {
+	for (int i=0; i < tiles.size(); i++) {
+		if (tiles[i]->getImage().compare("placeholder") == 0) {
+			setVelocity(-getVelocity()*.6);
+		}
+	}
+}
+
 RaceCar::RaceCar(const Zeni::Point2f &position,
 		const double rotation,
 		const Zeni::String image)
 		: Actor(position, Zeni::Vector2f(64.0f, 32.0f), rotation, image, Zeni::Vector2f(0.0f, 0.0f), Zeni::Vector2f(0.0f, 0.0f), 1.0) {
 	m_wheelSeparation = 64.0;
+	detectCollisionsWithBodies();
+	detectCollisionsWithTiles();
 }
 
 // If you might delete base class pointers, you need a virtual destructor.

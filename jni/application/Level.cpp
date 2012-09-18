@@ -118,10 +118,9 @@ void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize){
 const std::vector<Tile*> Level::getCollidingTiles(const Body &body) const {
 	std::vector<Tile*> tiles;
 	// Radius bounding box test
-	Zeni::Point2f center = body.getSize()/2.0 + body.getPosition();
-	double boundingRadius = (body.getSize()/2.0).magnitude();
-	for (int tileX = center.x/m_tileSize.i; tileX < (center.x + boundingRadius)/m_tileSize.i; tileX++) {
-		for (int tileY = center.y/m_tileSize.j; tileY < (center.y + boundingRadius)/m_tileSize.j; tileY++) {
+	std::pair<Zeni::Point2f, Zeni::Point2f> boundingBox = body.getBoundingBox();
+	for (int tileX = boundingBox.first.x/m_tileSize.i; tileX < boundingBox.second.x/m_tileSize.i; tileX++) {
+		for (int tileY = boundingBox.first.y/m_tileSize.j; tileY < boundingBox.second.y/m_tileSize.j; tileY++) {
 			if (tileX >= m_tiles.size() || tileY >= m_tiles[tileX].size()) {
 				continue;
 			}

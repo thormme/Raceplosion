@@ -31,6 +31,8 @@ private:
 	void applyRemoveBody(Body * body);
 	void applyBodyChanges();
 
+	const std::vector<std::vector<Body*>> getBodyCollisions();
+
 
 	void perform_logic();
 

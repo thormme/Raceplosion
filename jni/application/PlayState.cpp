@@ -55,6 +55,21 @@ void PlayState::applyBodyChanges() {
 	m_bodiesToRemove.clear();
 }
 
+const std::vector<std::vector<Body*>> PlayState::getBodyCollisions() {
+	std::vector<std::vector<Body*>> collisions(m_bodies.size());
+	for (int i = 0; i < m_bodies.size(); i++) {
+		if (m_bodies[i]->willDetectCollisionsWithBodies()) {
+			for (int j = i + 1; j < m_bodies.size(); j++) {
+				if (m_bodies[i]->isTouching(*m_bodies[j])) {
+					collisions[i].push_back(m_bodies[j]);
+					collisions[j].push_back(m_bodies[i]);
+				}
+			}
+		}
+	}
+	return collisions;
+}
+
 void PlayState::perform_logic() {
     const float timePassed = m_chronometer.seconds();
     const float timeStep = timePassed - m_timePassed;
@@ -65,10 +80,14 @@ void PlayState::perform_logic() {
 	for (int i=0; i < m_bodies.size(); i++) {
 		m_bodies[i]->stepPhysics(timeStep);
 	}
+	std::vector<std::vector<Body*>> bodyCollisions = getBodyCollisions();
     for (int i=0; i < m_bodies.size(); i++) {
+		std::vector<Tile*> tileCollisions;
+		if (m_bodies[i]->willDetectCollisionsWithTiles()) tileCollisions = m_level.getCollidingTiles(*m_bodies[i]);
+		m_bodies[i]->handleCollisions(timeStep, tileCollisions, bodyCollisions[i]);
 		Actor * actor = dynamic_cast<Actor*>(m_bodies[i]);
 		if (actor != nullptr) {
-			actor->act(m_level.getCollidingTiles(*actor), std::vector<Body*>()); // TODO: pass body collisions or possible simply store these beforehand so that body can acces these too...
+			actor->act(tileCollisions, bodyCollisions[i]); // TODO: pass body collisions or possible simply store these beforehand so that body can acces these too...
 		}
 	}
 
@@ -101,7 +120,7 @@ void PlayState::on_key(const SDL_KeyboardEvent &event) {
 void PlayState::render() {
 	Zeni::Video &vr = Zeni::get_Video();
 	Zeni::Point2f screenHalfResolution = Zeni::Point2f(600.0f, 500.0f);
-	int numPlayers = 1;
+	int numPlayers = 2;
 	for (int playerNum = 0; playerNum < numPlayers; playerNum++) {
 		if (m_bodies.size() > playerNum) {
 			float viewHeight = 500.0f/numPlayers;
