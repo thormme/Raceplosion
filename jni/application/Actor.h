@@ -3,14 +3,20 @@
 #include <zenilib.h>
 #include "Body.h"
 
+struct StateModifications {
+	std::vector<Tile*> tileChanges;
+	std::vector<Body*> bodyAdditions;
+	std::vector<Body*> bodyRemovals;
+};
+
 class Actor : public Body {
 
 private:
 	bool m_active;
 	
 protected:
-	
-	virtual void run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions); ///< Causes the actor to take an action.
+
+	virtual const StateModifications run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions); ///< Causes the actor to take an action.
 
 public:
 	Actor(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
@@ -21,7 +27,7 @@ public:
 		 const Zeni::Vector2f &acceleration = Zeni::Vector2f(0.0f, 0.0f),
 		 const double &mass = 1.0);
 
-	void act(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);
+	const StateModifications act(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);
 
 	virtual ~Actor();
 };

@@ -1,7 +1,7 @@
 #include <zenilib.h>
+#include <algorithm>
 #include "Body.h"
 #include "Tile.h"
-#include "Level.h"
 
 Body::Body(const Zeni::Point2f &position,
 		const Zeni::Vector2f &size,
@@ -20,13 +20,12 @@ Body::~Body() {
 }
 
 void Body::render() {
-	Zeni::Point2f center = getSize()/2.0 + getPosition();
-	double boundingRadius = (getSize()/2.0).magnitude();
+	std::pair<Zeni::Point2f, Zeni::Point2f> boundingBox = getBoundingBox();
 	Zeni::Video &vr = Zeni::get_Video();
-	Zeni::Vertex2f_Color v0(Zeni::Point2f(center.x - boundingRadius,center.y - boundingRadius), Zeni::Color(1.f,1.f,0.f,0.f));
-    Zeni::Vertex2f_Color v1(Zeni::Point2f(center.x - boundingRadius,center.y + boundingRadius), Zeni::get_Colors()["blue"]);
-    Zeni::Vertex2f_Color v2(Zeni::Point2f(center.x + boundingRadius,center.y + boundingRadius), Zeni::get_Colors()["green"]);
-    Zeni::Vertex2f_Color v3(Zeni::Point2f(center.x + boundingRadius,center.y - boundingRadius), Zeni::Color());
+	Zeni::Vertex2f_Color v0(boundingBox.first, Zeni::Color(1.f,1.f,0.f,0.f));
+    Zeni::Vertex2f_Color v1(Zeni::Point2f(boundingBox.first.x, boundingBox.second.y), Zeni::get_Colors()["blue"]);
+    Zeni::Vertex2f_Color v2(boundingBox.second, Zeni::get_Colors()["green"]);
+    Zeni::Vertex2f_Color v3(Zeni::Point2f(boundingBox.second.x, boundingBox.first.y), Zeni::Color());
 
     Zeni::Quadrilateral<Zeni::Vertex2f_Color> quad(v0, v1, v2, v3);
     vr.render(quad);
@@ -90,9 +89,13 @@ const Zeni::Vector2f Body::getSize() const {
 
 const std::pair<Zeni::Point2f, Zeni::Point2f> Body::getBoundingBox() const {
 	Zeni::Point2f center = getCenter();
-	double boundingRadius = (getSize()/2.0).magnitude();
-	return std::make_pair(Zeni::Point2f(center.x - boundingRadius, center.y - boundingRadius),
-				   Zeni::Point2f(center.x + boundingRadius, center.y + boundingRadius));
+	Zeni::Vector2f halfSize = getSize()/2.0;
+	double rotationSin = abs(sin(getRotation()));
+	double rotationCos = abs(cos(getRotation()));
+	double boundingX = rotationCos*halfSize.x + rotationSin*halfSize.y;
+	double boundingY = rotationSin*halfSize.x + rotationCos*halfSize.y;
+	return std::make_pair(Zeni::Point2f(center.x - boundingX, center.y - boundingY),
+						  Zeni::Point2f(center.x + boundingX, center.y + boundingY));
 }
 
 const Zeni::Point2f Body::getCenter() const {

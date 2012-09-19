@@ -3,12 +3,10 @@
 #include "Input.h"
 
 // Causes the actor to take an action.
-void Actor::run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
-	if (Input::isKeyDown(SDLK_DOWN)) {
-		setForce(Zeni::Vector2f(100.0f, 100.0f));
-	} else {
-		setForce(Zeni::Vector2f(0.0f, 0.0f));
-	}
+const StateModifications Actor::run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
+	StateModifications sm = StateModifications();
+	sm.bodyAdditions.push_back(new Body());
+	return sm;
 }
 
 Actor::Actor(const Zeni::Point2f &position,
@@ -22,12 +20,15 @@ Actor::Actor(const Zeni::Point2f &position,
 	m_active = true;
 }
 
-void Actor::act(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
+const StateModifications Actor::act(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
+	StateModifications stateModifications = StateModifications();
 	if (m_active) {
-		run(tileCollisions, bodyCollisions);
+		stateModifications = run(tileCollisions, bodyCollisions);
 	}
 	//m_active = false;
 	m_active = true;
+
+	return stateModifications;
 }
 
 // If you might delete base class pointers, you need a virtual destructor.

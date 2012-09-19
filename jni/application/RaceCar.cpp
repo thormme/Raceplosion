@@ -20,7 +20,8 @@ const Zeni::Vector2f RaceCar::getHorizontalFrictionForce() {
 }
 
 // Causes the actor to take an action.
-void RaceCar::run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
+const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
+	StateModifications stateModifications = StateModifications();
 	setForce(Zeni::Vector2f(0.0f, 0.0f));
 	m_wheelRotation = 0;
 
@@ -41,9 +42,9 @@ void RaceCar::run(const std::vector<Tile*> &tileCollisions, const std::vector<Bo
 	}
 
 	if (Input::isKeyPressed(SDLK_w)) {
-		PlayState * playState = dynamic_cast<PlayState*>(&Zeni::get_Game().get_top().get());
-		playState->addBody(new RaceCar(getPosition()));
+		stateModifications.bodyAdditions.push_back(new Body(getPosition()));
 	}
+	return stateModifications;
 }
 
 void RaceCar::stepPhysics(const double timeStep) {
@@ -70,7 +71,7 @@ void RaceCar::stepPhysics(const double timeStep) {
 void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies) {
 	for (int i=0; i < tiles.size(); i++) {
 		if (tiles[i]->getImage().compare("placeholder") == 0) {
-			setVelocity(-getVelocity()*.6);
+			setForce(-getDirectionalVelocity(getRotation()));
 		}
 	}
 }
