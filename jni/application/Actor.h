@@ -4,9 +4,13 @@
 #include "Body.h"
 
 struct StateModifications {
-	std::vector<Tile*> tileChanges;
-	std::vector<Body*> bodyAdditions;
-	std::vector<Body*> bodyRemovals;
+	std::list<Tile*> tileChanges;
+	std::list<Body*> bodyAdditions;
+	std::list<Body*> bodyRemovals;
+
+	void combine(const StateModifications &stateModifications) {
+		//tileChanges.insert(tileChanges.tileChanges.begin
+	}
 };
 
 class Actor : public Body {

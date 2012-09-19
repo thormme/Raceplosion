@@ -13,26 +13,17 @@ public:
 	
 	virtual ~PlayState();
 
-	void addBody(Body * body); ///< Add a body to the world; deletion will be handled.
-
-	void removeBody(Body * body); ///< Remove a body from the world.
-
 private:
 	Level m_level;
 	std::vector<Body*> m_bodies;
 	Zeni::Chronometer<Zeni::Time> m_chronometer;
 	float m_timePassed;
 
-	
-	std::vector<Body*> m_bodiesToAdd;
-	std::vector<Body*> m_bodiesToRemove;
-
-	void applyAddBody(Body * body);
-	void applyRemoveBody(Body * body);
-	void applyBodyChanges();
-
 	const std::vector<std::vector<Body*>> getBodyCollisions();
 
+	void addBody(Body * body); ///< Add a body to the world.
+
+	void removeBody(Body * body); ///< Remove a body from the world.
 
 	void perform_logic();
 

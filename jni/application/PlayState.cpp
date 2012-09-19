@@ -24,35 +24,16 @@ PlayState::~PlayState() {
 }
 
 void PlayState::addBody(Body * body) {
-	m_bodiesToAdd.push_back(body);
-}
-
-void PlayState::removeBody(Body * body) {
-	m_bodiesToRemove.push_back(body);
-}
-
-void PlayState::applyAddBody(Body * body) {
 	m_bodies.push_back(body);
 }
 	
-void PlayState::applyRemoveBody(Body * body) {
+void PlayState::removeBody(Body * body) {
 	for (int i=0; i < m_bodies.size(); i++) {
 		if (m_bodies[i] == body) {
 			delete m_bodies[i];
 			m_bodies.erase(m_bodies.begin() + i);
 		}
 	}
-}
-
-void PlayState::applyBodyChanges() {
-	for (int i=0; i < m_bodiesToAdd.size(); i++) {
-		applyAddBody(m_bodiesToAdd[i]);
-	}
-	for (int i=0; i < m_bodiesToRemove.size(); i++) {
-		applyRemoveBody(m_bodiesToRemove[i]);
-	}
-	m_bodiesToAdd.clear();
-	m_bodiesToRemove.clear();
 }
 
 const std::vector<std::vector<Body*>> PlayState::getBodyCollisions() {
@@ -75,7 +56,7 @@ void PlayState::perform_logic() {
     const float timeStep = timePassed - m_timePassed;
     m_timePassed = timePassed;
 
-	applyBodyChanges();
+	StateModifications stateModifications = StateModifications();
 
 	for (int i=0; i < m_bodies.size(); i++) {
 		m_bodies[i]->stepPhysics(timeStep);
