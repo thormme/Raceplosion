@@ -4,12 +4,14 @@
 #include "Body.h"
 
 struct StateModifications {
-	std::list<Tile*> tileChanges;
+	std::list<Tile> tileChanges;
 	std::list<Body*> bodyAdditions;
 	std::list<Body*> bodyRemovals;
 
 	void combine(const StateModifications &stateModifications) {
-		//tileChanges.insert(tileChanges.tileChanges.begin
+		tileChanges.insert(tileChanges.end(), stateModifications.tileChanges.begin(), stateModifications.tileChanges.end());
+		bodyAdditions.insert(bodyAdditions.end(), stateModifications.bodyAdditions.begin(), stateModifications.bodyAdditions.end());
+		bodyRemovals.insert(bodyRemovals.end(), stateModifications.bodyRemovals.begin(), stateModifications.bodyRemovals.end());
 	}
 };
 

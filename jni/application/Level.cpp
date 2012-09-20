@@ -137,3 +137,7 @@ const std::vector<Tile*> Level::getCollidingTiles(const Body &body) const {
 const Tile Level::getTile(Zeni::Point2f position) {
 	return Tile();
 }
+
+void Level::changeTile(Tile tile) {
+	*m_tiles[tile.getPosition().x/m_tileSize.i][tile.getPosition().y/m_tileSize.y] = tile;
+}

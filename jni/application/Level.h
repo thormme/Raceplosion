@@ -25,5 +25,7 @@ public:
 	const std::vector<Tile*> getCollidingTiles(const Body &body) const;
 
 	const Tile getTile(Zeni::Point2f position);
+
+	void changeTile(Tile tile);
 };
 #endif

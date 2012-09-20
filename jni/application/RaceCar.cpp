@@ -44,6 +44,13 @@ const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, 
 	if (Input::isKeyPressed(SDLK_w)) {
 		stateModifications.bodyAdditions.push_back(new Body(getPosition()));
 	}
+
+	if (Input::isKeyDown(SDLK_q)) {
+		for (std::vector<Tile*>::const_iterator it = tileCollisions.begin(); it != tileCollisions.end(); it++) {
+			Tile newTile = Tile((*it)->getPosition(), Zeni::String("grass"));
+			stateModifications.tileChanges.push_back(newTile);
+		}
+	}
 	return stateModifications;
 }
 
@@ -71,7 +78,7 @@ void RaceCar::stepPhysics(const double timeStep) {
 void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies) {
 	for (int i=0; i < tiles.size(); i++) {
 		if (tiles[i]->getImage().compare("placeholder") == 0) {
-			setForce(-getDirectionalVelocity(getRotation()));
+			setVelocity(Zeni::Vector2f(0.0, 0.0));
 		}
 	}
 }

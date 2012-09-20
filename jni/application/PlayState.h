@@ -25,6 +25,8 @@ private:
 
 	void removeBody(Body * body); ///< Remove a body from the world.
 
+	void applyStateModifications(StateModifications &stateModifications);
+
 	void perform_logic();
 
 	void on_push();

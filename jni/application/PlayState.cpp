@@ -36,6 +36,18 @@ void PlayState::removeBody(Body * body) {
 	}
 }
 
+void PlayState::applyStateModifications(StateModifications &stateModifications) {
+	for (std::list<Body*>::iterator it = stateModifications.bodyAdditions.begin(); it != stateModifications.bodyAdditions.end(); it++) {
+		addBody(*it);
+	}
+	for (std::list<Body*>::iterator it = stateModifications.bodyRemovals.begin(); it != stateModifications.bodyRemovals.end(); it++) {
+		removeBody(*it);
+	}
+	for (std::list<Tile>::iterator it = stateModifications.tileChanges.begin(); it != stateModifications.tileChanges.end(); it++) {
+		m_level.changeTile(*it);
+	}
+}
+
 const std::vector<std::vector<Body*>> PlayState::getBodyCollisions() {
 	std::vector<std::vector<Body*>> collisions(m_bodies.size());
 	for (int i = 0; i < m_bodies.size(); i++) {
@@ -68,9 +80,11 @@ void PlayState::perform_logic() {
 		m_bodies[i]->handleCollisions(timeStep, tileCollisions, bodyCollisions[i]);
 		Actor * actor = dynamic_cast<Actor*>(m_bodies[i]);
 		if (actor != nullptr) {
-			actor->act(tileCollisions, bodyCollisions[i]); // TODO: pass body collisions or possible simply store these beforehand so that body can acces these too...
+			stateModifications.combine(actor->act(tileCollisions, bodyCollisions[i])); // TODO: pass body collisions or possible simply store these beforehand so that body can acces these too...
 		}
 	}
+
+	applyStateModifications(stateModifications);
 
 	Input::stepInput();
 
