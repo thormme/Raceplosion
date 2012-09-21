@@ -5,13 +5,27 @@
 #include "Tile.h"
 #include "Body.h"
 
+Zeni::String getImageNameFromColor(const Zeni::Color color) {
+	if (color == Zeni::Color(1.0, 0.0, 1.0, 0.129411765)) {
+		return "grass";
+	}
+	if (color == Zeni::Color(1.0, 0.0, 0.0, 0.0)) {
+		return "black";
+	}
+	if (color == Zeni::Color(1.0, 0.498039216, 0.2, 0.0)) {
+		return "dirt";
+	}
+	return "placeholder";
+}
+
 // TODO: implement
 Level::Level(Zeni::String fileName) {
+	Zeni::Image levelImage = Zeni::Image("levels/lvl1.png");
 	for (long i=1; Zeni::get_Textures().find(i); i++) {
 		m_numTextures = i;
 	}
 	m_tileSize = Zeni::Vector2f(32.0, 32.0);
-	Zeni::String fileData;
+	/*Zeni::String fileData;
 	Zeni::File_Ops::load_asset(fileData, fileName);
 	std::string s = "";
 	for (int i=0; i<fileData.size(); i++) {
@@ -20,12 +34,10 @@ Level::Level(Zeni::String fileName) {
 		}
 	}
 	std::istringstream fileDataStream(s);
-	std::string line;
-	for (int y=0; std::getline(fileDataStream, line); y++) {
-		std::istringstream lineStream(line);
-		std::string tile;
-		for (int x=0; std::getline(lineStream, tile, ','); x++) {
-			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), Zeni::String(tile));
+	std::string line;*/
+	for (int y=0; y < levelImage.height(); y++) {
+		for (int x=0; x < levelImage.width(); x++) {
+			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), getImageNameFromColor(levelImage.extract_Color(Zeni::Point2i(x, y))));
 			setTile(newTile);
 		}
 	}
