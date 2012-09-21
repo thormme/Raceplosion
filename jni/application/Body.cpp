@@ -20,7 +20,7 @@ Body::~Body() {
 }
 
 void Body::render() {
-	std::pair<Zeni::Point2f, Zeni::Point2f> boundingBox = getBoundingBox();
+	/*std::pair<Zeni::Point2f, Zeni::Point2f> boundingBox = getBoundingBox();
 	Zeni::Video &vr = Zeni::get_Video();
 	Zeni::Vertex2f_Color v0(boundingBox.first, Zeni::Color(1.f,1.f,0.f,0.f));
     Zeni::Vertex2f_Color v1(Zeni::Point2f(boundingBox.first.x, boundingBox.second.y), Zeni::get_Colors()["blue"]);
@@ -28,7 +28,7 @@ void Body::render() {
     Zeni::Vertex2f_Color v3(Zeni::Point2f(boundingBox.second.x, boundingBox.first.y), Zeni::Color());
 
     Zeni::Quadrilateral<Zeni::Vertex2f_Color> quad(v0, v1, v2, v3);
-    vr.render(quad);
+    vr.render(quad);*/
 	render_image(
       m_image, // which texture to use
       m_position, // upper-left corner
@@ -123,7 +123,7 @@ const bool Body::isTouching(const Body &body) const {
 	return distance < (body.getSize()/2.0 + getSize()/2.0).magnitude();
 }
 
-// TODO: implement
+// TODO: improve
 const bool Body::isTouching(const Zeni::Point2f &position, const Zeni::Vector2f &size) const {
 	// Radius bounding box test
 	std::pair<Zeni::Point2f, Zeni::Point2f> boundingBox = getBoundingBox();
@@ -133,7 +133,26 @@ const bool Body::isTouching(const Zeni::Point2f &position, const Zeni::Vector2f 
 		position.y + size.j < boundingBox.first.y) {
 		return false;
 	}
-	return true;
+	std::list<Zeni::Point2f> points;
+	points.push_back(position);
+	points.push_back(position + size);
+	points.push_back(Zeni::Point2f(position.x + size.x, position.y));
+	points.push_back(Zeni::Point2f(position.x, position.y + size.y));
+	Zeni::Vector2f directionVector(cos(getRotation()), sin(getRotation()));
+	Zeni::Vector2f perpendicularDirectionVector(cos(getRotation() + 3.1415/2.0), sin(getRotation() + 3.1415/2.0));
+	double width = getSize().x/2.0;
+	double height = getSize().y/2.0;
+	for (std::list<Zeni::Point2f>::iterator it = points.begin(); it != points.end(); it++) {
+		Zeni::Vector2f difference = getCenter() - *it;
+		Zeni::Vector2f widthDistanceVector = (difference * directionVector) / directionVector.magnitude() * directionVector;
+		if (widthDistanceVector.magnitude() <= width) {
+			Zeni::Vector2f heightDistanceVector = (difference * perpendicularDirectionVector) / directionVector.magnitude() * perpendicularDirectionVector;
+			if (heightDistanceVector.magnitude() <= height) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 const double Body::getRotation() const {
