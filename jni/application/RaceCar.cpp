@@ -1,12 +1,13 @@
 #include <zenilib.h>
 #include <cmath>
 #include <sstream>
+#include "Utils.h"
 #include "RaceCar.h"
 #include "Input.h"
 #include "PlayState.h"
 
 namespace {
-	const double PI = 3.141592653589793238462;
+	const double FRICTION_COEFFICIENT = 1000.0;
 }
 
 const Zeni::Vector2f RaceCar::getDirectionalVelocity(const double &direction) {
@@ -16,7 +17,7 @@ const Zeni::Vector2f RaceCar::getDirectionalVelocity(const double &direction) {
 
 const Zeni::Vector2f RaceCar::getHorizontalFrictionForce() {
 	Zeni::Vector2f perpendicularVelocity = getVelocity() - getDirectionalVelocity(getRotation());
-	return -perpendicularVelocity.normalized()*1000/*friction coefficient*/*getMass();
+	return -perpendicularVelocity.normalized()*FRICTION_COEFFICIENT*m_friction*getMass();
 }
 
 // Causes the actor to take an action.
@@ -34,11 +35,11 @@ const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, 
 	}
 
 	if (Input::isKeyDown(SDLK_LEFT)) {
-		m_wheelRotation = PI/6;
+		m_wheelRotation = Utils::PI/6;
 	}
 
 	if (Input::isKeyDown(SDLK_RIGHT)) {
-		m_wheelRotation = -PI/6;
+		m_wheelRotation = -Utils::PI/6;
 	}
 
 	if (Input::isKeyPressed(SDLK_w)) {
@@ -64,11 +65,11 @@ void RaceCar::stepPhysics(const double timeStep) {
 		} else {
 			directionVelocity = -getDirectionalVelocity(getRotation()).magnitude();
 		}
-		setRotationRate(1.0/(m_wheelSeparation/cos(m_wheelRotation + PI/2.0))*directionVelocity);
+		setRotationRate(1.0/(m_wheelSeparation/cos(m_wheelRotation + Utils::PI/2.0))*directionVelocity);
 	} else {
 		setRotationRate(0);
 	}
-	if (getDirectionalVelocity(getRotation()+PI/2).magnitude() > 1) setForce(getForce()  + getHorizontalFrictionForce());
+	if (getDirectionalVelocity(getRotation()+Utils::PI/2).magnitude() > 1) setForce(getForce()  + getHorizontalFrictionForce());
 	/*std::ostringstream str;
 	str << getDirectionalVelocity(getRotation()+PI/2).magnitude() << "\n";
 	OutputDebugString( str.str().c_str());*/
@@ -76,11 +77,21 @@ void RaceCar::stepPhysics(const double timeStep) {
 }
 
 void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies) {
+	m_friction = 0;
 	for (int i=0; i < tiles.size(); i++) {
 		if (tiles[i]->getImage().compare("placeholder") == 0) {
-			setVelocity(Zeni::Vector2f(0.0, 0.0));
+			// Hit a wall
+			Zeni::Vector2f velocityTowardTile = getDirectionalVelocity(Utils::getAngleFromVector((tiles[i]->getPosition() + Zeni::Vector2f(16.0, 16.0)) - getCenter()));
+			setVelocity(getVelocity() - velocityTowardTile);
+			setPosition(getPosition() - ((tiles[i]->getPosition() + Zeni::Vector2f(16.0, 16.0)) - getCenter()));
+		}
+		if (tiles[i]->getImage().compare("grass") == 0) {
+			m_friction += .5;
+		} else {
+			m_friction += 1.0;
 		}
 	}
+	if (tiles.size()) m_friction /= tiles.size();
 }
 
 RaceCar::RaceCar(const Zeni::Point2f &position,

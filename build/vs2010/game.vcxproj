@@ -224,6 +224,8 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
     <ClInclude Include="..\..\jni\application\PlayState.h" />
     <ClInclude Include="..\..\jni\application\RaceCar.h" />
     <ClInclude Include="..\..\jni\application\Tile.h" />
+    <ClInclude Include="..\..\jni\application\Utils.h" />
+    <ClInclude Include="..\..\jni\application\Viewport.h" />
     <ClInclude Include="..\..\jni\external\zenilib\zenilib.h" />
     <ClInclude Include="..\..\jni\external\zenilib\zeni_core\android_native_app_glue.h" />
     <ClInclude Include="..\..\jni\external\zenilib\zeni_core\zeni_core.h" />
@@ -347,6 +349,8 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
     <ClCompile Include="..\..\jni\application\PlayState.cpp" />
     <ClCompile Include="..\..\jni\application\RaceCar.cpp" />
     <ClCompile Include="..\..\jni\application\Tile.cpp" />
+    <ClCompile Include="..\..\jni\application\Utils.cpp" />
+    <ClCompile Include="..\..\jni\application\Viewport.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

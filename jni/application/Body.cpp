@@ -1,5 +1,6 @@
 #include <zenilib.h>
 #include <algorithm>
+#include "Utils.h"
 #include "Body.h"
 #include "Tile.h"
 
@@ -133,13 +134,14 @@ const bool Body::isTouching(const Zeni::Point2f &position, const Zeni::Vector2f 
 		position.y + size.j < boundingBox.first.y) {
 		return false;
 	}
+	// Test whether corners intersect body
 	std::list<Zeni::Point2f> points;
 	points.push_back(position);
 	points.push_back(position + size);
 	points.push_back(Zeni::Point2f(position.x + size.x, position.y));
 	points.push_back(Zeni::Point2f(position.x, position.y + size.y));
 	Zeni::Vector2f directionVector(cos(getRotation()), sin(getRotation()));
-	Zeni::Vector2f perpendicularDirectionVector(cos(getRotation() + 3.1415/2.0), sin(getRotation() + 3.1415/2.0));
+	Zeni::Vector2f perpendicularDirectionVector(cos(getRotation() + Utils::PI/2.0), sin(getRotation() + Utils::PI/2.0));
 	double width = getSize().x/2.0;
 	double height = getSize().y/2.0;
 	for (std::list<Zeni::Point2f>::iterator it = points.begin(); it != points.end(); it++) {
@@ -157,6 +159,10 @@ const bool Body::isTouching(const Zeni::Point2f &position, const Zeni::Vector2f 
 
 const double Body::getRotation() const {
 	return m_rotation;
+}
+
+const Zeni::Vector2f Body::getRotationVector() const {
+	return Zeni::Vector2f(cos(getRotation()), sin(getRotation())); 
 }
 
 const bool Body::willDetectCollisionsWithTiles() const {

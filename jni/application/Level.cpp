@@ -5,17 +5,19 @@
 #include "Tile.h"
 #include "Body.h"
 
-Zeni::String getImageNameFromColor(const Zeni::Color color) {
-	if (color == Zeni::Color(1.0, 0.0, 1.0, 0.129411765)) {
+enum { GRASS = 0x00FF00FF, BLACK = 0x000000FF, DIRT = 0x7F3300FF};
+
+Zeni::String getImageNameFromColor(const Uint32 color) {
+	switch (color) {
+	case GRASS: 
 		return "grass";
-	}
-	if (color == Zeni::Color(1.0, 0.0, 0.0, 0.0)) {
+	case BLACK:
 		return "black";
-	}
-	if (color == Zeni::Color(1.0, 0.498039216, 0.2, 0.0)) {
+	case DIRT:
 		return "dirt";
+	default:
+		return "placeholder";
 	}
-	return "placeholder";
 }
 
 // TODO: implement
@@ -37,7 +39,7 @@ Level::Level(Zeni::String fileName) {
 	std::string line;*/
 	for (int y=0; y < levelImage.height(); y++) {
 		for (int x=0; x < levelImage.width(); x++) {
-			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), getImageNameFromColor(levelImage.extract_Color(Zeni::Point2i(x, y))));
+			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), getImageNameFromColor(levelImage.extract_RGBA(Zeni::Point2i(x, y))));
 			setTile(newTile);
 		}
 	}
@@ -84,7 +86,7 @@ void Level::setTile(Tile tile) {
 	}
 }
 
-void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize){
+void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const{
 	Zeni::Video &vr = Zeni::get_Video();
 	Zeni::Chronometer<Zeni::Time> chrono;
 	chrono.start();

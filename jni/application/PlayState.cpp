@@ -15,6 +15,7 @@ PlayState::PlayState()
 	m_chronometer.start();
 	addBody(new RaceCar());
 	addBody(new RaceCar(Zeni::Point2f(100.0, 100.0)));
+	m_viewports.push_back(Viewport(Zeni::Point2f(), Zeni::Vector2f(1.0f, 1.0f)));
 }
 
 PlayState::~PlayState() {
@@ -84,6 +85,12 @@ void PlayState::perform_logic() {
 		}
 	}
 
+	for (std::vector<Viewport>::iterator it = m_viewports.begin(); it != m_viewports.end(); it++) {
+		Zeni::Vector2f directionalOffset = Zeni::Vector2f(600.0f/3.0, 500.0f/3.0).multiply_by(m_bodies[0]->getRotationVector());
+		it->stepViewportPosition(timeStep, m_bodies[0]->getPosition() - Zeni::Vector2f(600.0f, 500.0f) + directionalOffset);
+	}
+	
+
 	applyStateModifications(stateModifications);
 
 	Input::stepInput();
@@ -113,20 +120,11 @@ void PlayState::on_key(const SDL_KeyboardEvent &event) {
 }
 
 void PlayState::render() {
-	Zeni::Video &vr = Zeni::get_Video();
-	Zeni::Point2f screenHalfResolution = Zeni::Point2f(600.0f, 500.0f);
-	int numPlayers = 2;
-	for (int playerNum = 0; playerNum < numPlayers; playerNum++) {
-		if (m_bodies.size() > playerNum) {
-			float viewHeight = 500.0f/numPlayers;
-			vr.set_2d_view(std::make_pair(m_bodies[playerNum]->getPosition() - Zeni::Point2f(600.0f, viewHeight), m_bodies[playerNum]->getPosition() + Zeni::Point2f(600.0f, viewHeight)),
-				std::make_pair(Zeni::Point2i(0.0f, (vr.get_render_target_size().y/numPlayers)*(playerNum)), Zeni::Point2i(vr.get_render_target_size().x, (vr.get_render_target_size().y/numPlayers)*(playerNum+1))), true);
-		}
-
-		if (m_bodies.size() > playerNum) m_level.render(m_bodies[playerNum]->getPosition() - screenHalfResolution, Zeni::Vector2f(screenHalfResolution)*2);
-
-		for (int i=0; i < m_bodies.size(); i++) {
-			m_bodies[i]->render();
-		}
+	for (std::vector<Viewport>::iterator it = m_viewports.begin(); it != m_viewports.end(); it++) {
+		/*Zeni::Vector2f directionalOffset = Zeni::Vector2f(600.0f/3.0, viewHeight/3.0).multiply_by(m_bodies[playerNum]->getRotationVector());
+		Zeni::Point2f upperLeft = m_bodies[playerNum]->getPosition() - Zeni::Vector2f(600.0f, viewHeight) + directionalOffset;
+		Zeni::Point2f lowerRight = m_bodies[playerNum]->getPosition() + Zeni::Vector2f(600.0f, viewHeight) + directionalOffset;*/
+			
+		it->render(m_level, m_bodies);
 	}
 }

@@ -3,6 +3,7 @@
 #include <zenilib.h>
 #include "Level.h"
 #include "Actor.h"
+#include "Viewport.h"
 
 class PlayState : public Zeni::Gamestate_Base {
 	PlayState(const PlayState &);
@@ -16,10 +17,11 @@ public:
 private:
 	Level m_level;
 	std::vector<Body*> m_bodies;
+	std::vector<Viewport> m_viewports;
 	Zeni::Chronometer<Zeni::Time> m_chronometer;
 	float m_timePassed;
 
-	const std::vector<std::vector<Body*>> getBodyCollisions();
+	const std::vector<std::vector<Body*>> getBodyCollisions(); ///< Get collisions between bodies, returns vector for each Body
 
 	void addBody(Body * body); ///< Add a body to the world.
 

@@ -20,7 +20,7 @@ public:
 
 	virtual ~Level();
 
-	void render(Zeni::Point2f offset, Zeni::Vector2f screenSize); ///< Render the level tiles
+	void render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const; ///< Render the level tiles
 
 	const std::vector<Tile*> getCollidingTiles(const Body &body) const;
 

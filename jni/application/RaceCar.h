@@ -8,6 +8,7 @@ class RaceCar : public Actor {
 private:
 	double m_wheelRotation;
 	double m_wheelSeparation;
+	double m_friction;
 
 	const Zeni::Vector2f getHorizontalFrictionForce();
 	const Zeni::Vector2f getDirectionalVelocity(const double &direction);

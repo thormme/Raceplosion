@@ -54,6 +54,7 @@ public:
 	const bool isTouching(const Body &body) const;
 	const bool isTouching(const Zeni::Point2f &position, const Zeni::Vector2f &size) const;
 	const double getRotation() const;
+	const Zeni::Vector2f getRotationVector() const;
 	const bool willDetectCollisionsWithTiles() const;
 	const bool willDetectCollisionsWithBodies() const;
 
