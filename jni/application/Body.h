@@ -1,7 +1,21 @@
 #ifndef BODY_H
 #define BODY_H
 #include <zenilib.h>
+#include <limits>
 #include "Tile.h"
+
+struct Collision {
+	Zeni::Point2f position;
+	Zeni::Vector2f widthDistanceVector;
+	Zeni::Vector2f heightDistanceVector;
+
+	bool isColliding;
+
+	Collision() : position(), 
+		isColliding(false), 
+		widthDistanceVector(Zeni::Vector2f(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())), 
+		heightDistanceVector(Zeni::Vector2f(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())) {}
+};
 
 class Body {
 
@@ -53,6 +67,7 @@ public:
 	const double getMass() const;
 	const bool isTouching(const Body &body) const;
 	const bool isTouching(const Zeni::Point2f &position, const Zeni::Vector2f &size) const;
+	const Collision getCollision(const std::list<Zeni::Point2f> &points, const bool nearest = false) const;
 	const double getRotation() const;
 	const Zeni::Vector2f getRotationVector() const;
 	const bool willDetectCollisionsWithTiles() const;

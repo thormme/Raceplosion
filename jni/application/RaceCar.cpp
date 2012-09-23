@@ -12,7 +12,7 @@ namespace {
 
 const Zeni::Vector2f RaceCar::getDirectionalVelocity(const double &direction) {
 	Zeni::Vector2f directionVector(cos(direction), sin(direction));
-	return (getVelocity() * directionVector) / directionVector.magnitude() * directionVector;
+	return (getVelocity() * directionVector) / directionVector.magnitude2() * directionVector;
 }
 
 const Zeni::Vector2f RaceCar::getHorizontalFrictionForce() {
@@ -81,9 +81,20 @@ void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, 
 	for (int i=0; i < tiles.size(); i++) {
 		if (tiles[i]->getImage().compare("placeholder") == 0) {
 			// Hit a wall
+			std::list<Zeni::Point2f> points;
+			// TODO:: Store size in tile so that these assumptions don't have to be made.
+			points.push_back(tiles[i]->getPosition());
+			points.push_back(tiles[i]->getPosition() + Zeni::Vector2f(32.0, 32.0));
+			points.push_back(Zeni::Point2f(tiles[i]->getPosition().x + Zeni::Vector2f(32.0, 32.0).i, tiles[i]->getPosition().y));
+			points.push_back(Zeni::Point2f(tiles[i]->getPosition().x, tiles[i]->getPosition().y +Zeni::Vector2f(32.0, 32.0).j));
+			Collision collision = getCollision(points, true);
 			Zeni::Vector2f velocityTowardTile = getDirectionalVelocity(Utils::getAngleFromVector((tiles[i]->getPosition() + Zeni::Vector2f(16.0, 16.0)) - getCenter()));
 			setVelocity(getVelocity() - velocityTowardTile);
-			setPosition(getPosition() - ((tiles[i]->getPosition() + Zeni::Vector2f(16.0, 16.0)) - getCenter()));
+			double heightDifference = getSize().j/2.0 - collision.heightDistanceVector.magnitude();
+			double widthDifference = getSize().i/2.0 - collision.widthDistanceVector.magnitude();
+			Zeni::Vector2f positionModifier = heightDifference < widthDifference ? collision.heightDistanceVector.normalized()*heightDifference : collision.widthDistanceVector.normalized()*widthDifference;
+			// TODO: This should NOT be necessary!
+			if (collision.isColliding) setPosition(getPosition() + positionModifier);
 		}
 		if (tiles[i]->getImage().compare("grass") == 0) {
 			m_friction += .5;

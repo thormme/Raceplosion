@@ -140,21 +140,39 @@ const bool Body::isTouching(const Zeni::Point2f &position, const Zeni::Vector2f 
 	points.push_back(position + size);
 	points.push_back(Zeni::Point2f(position.x + size.x, position.y));
 	points.push_back(Zeni::Point2f(position.x, position.y + size.y));
+	return getCollision(points).isColliding;
+}
+
+const Collision Body::getCollision(const std::list<Zeni::Point2f> &points, const bool nearest) const {
+	Collision nearestCollision = Collision();
 	Zeni::Vector2f directionVector(cos(getRotation()), sin(getRotation()));
 	Zeni::Vector2f perpendicularDirectionVector(cos(getRotation() + Utils::PI/2.0), sin(getRotation() + Utils::PI/2.0));
 	double width = getSize().x/2.0;
 	double height = getSize().y/2.0;
-	for (std::list<Zeni::Point2f>::iterator it = points.begin(); it != points.end(); it++) {
+	for (std::list<Zeni::Point2f>::const_iterator it = points.begin(); it != points.end(); it++) {
 		Zeni::Vector2f difference = getCenter() - *it;
 		Zeni::Vector2f widthDistanceVector = (difference * directionVector) / directionVector.magnitude() * directionVector;
 		if (widthDistanceVector.magnitude() <= width) {
 			Zeni::Vector2f heightDistanceVector = (difference * perpendicularDirectionVector) / directionVector.magnitude() * perpendicularDirectionVector;
 			if (heightDistanceVector.magnitude() <= height) {
-				return true;
+				if (nearest) {
+					if (std::min(heightDistanceVector.magnitude2(), widthDistanceVector.magnitude2()) < std::min(nearestCollision.heightDistanceVector.magnitude2(), nearestCollision.widthDistanceVector.magnitude2())) {
+						nearestCollision.isColliding = true;
+						nearestCollision.heightDistanceVector = heightDistanceVector;
+						nearestCollision.widthDistanceVector = widthDistanceVector;
+						nearestCollision.position = *it;
+					}
+				} else {
+					nearestCollision.isColliding = true;
+					nearestCollision.heightDistanceVector = heightDistanceVector;
+					nearestCollision.widthDistanceVector = widthDistanceVector;
+					nearestCollision.position = *it;
+					return nearestCollision;
+				}
 			}
 		}
 	}
-	return false;
+	return nearestCollision;
 }
 
 const double Body::getRotation() const {

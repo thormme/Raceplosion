@@ -14,7 +14,7 @@ PlayState::PlayState()
     set_pausable(true);
 	m_chronometer.start();
 	addBody(new RaceCar());
-	addBody(new RaceCar(Zeni::Point2f(100.0, 100.0)));
+	//addBody(new RaceCar(Zeni::Point2f(100.0, 100.0)));
 	m_viewports.push_back(Viewport(Zeni::Point2f(), Zeni::Vector2f(1.0f, 1.0f)));
 }
 
