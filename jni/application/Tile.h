@@ -1,23 +1,27 @@
 #ifndef TILE_H
 #define TILE_H
 #include <zenilib.h>
+#include "GameObject.h"
 
-class Tile {
+class Tile : public GameObject {
 
 private:
-	Zeni::Point2f m_position; // Tile position in level coordinates
-	Zeni::String m_image; // Name of the image to draw
+	Zeni::String m_type; // Name of the image to draw
 	long m_imageId;
+
+	bool m_solid;
 
 public:
 	Tile(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
+		const Zeni::Vector2f &size = Zeni::Vector2f(32.0f, 32.0f),
 		const Zeni::String &image = "placeholder");
 
 	// If you might delete base class pointers, you need a virtual destructor.
 	virtual ~Tile();
 
-	const Zeni::String getImage() const;
+	const Zeni::String getType() const;
 	const long getImageId() const;
-	const Zeni::Point2f getPosition() const;
+
+	const bool Tile::isSolid() const;
 };
 #endif

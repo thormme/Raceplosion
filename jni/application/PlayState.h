@@ -15,8 +15,9 @@ public:
 	virtual ~PlayState();
 
 private:
-	Level m_level;
+	Level* m_level;
 	std::vector<Body*> m_bodies;
+	std::vector<Body*> m_trackedBodies;
 	std::vector<Viewport> m_viewports;
 	Zeni::Chronometer<Zeni::Time> m_chronometer;
 	float m_timePassed;
@@ -26,6 +27,8 @@ private:
 	void addBody(Body * body); ///< Add a body to the world.
 
 	void removeBody(Body * body); ///< Remove a body from the world.
+
+	void loadLevel(Zeni::String fileName);
 
 	void applyStateModifications(StateModifications &stateModifications);
 

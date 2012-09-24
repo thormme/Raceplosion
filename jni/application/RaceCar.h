@@ -9,6 +9,8 @@ private:
 	double m_wheelRotation;
 	double m_wheelSeparation;
 	double m_friction;
+	Zeni::Point2f m_startPosition;
+	Zeni::Point2f m_lastGroundPosition;
 
 	const Zeni::Vector2f getHorizontalFrictionForce();
 	const Zeni::Vector2f getDirectionalVelocity(const double &direction);

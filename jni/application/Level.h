@@ -16,7 +16,7 @@ private:
 	void setTile(Tile tile);
 
 public:
-	Level(const Zeni::String fileName = "levels/lvl1.csv");
+	Level(const Zeni::String fileName = "levels/level1");
 
 	virtual ~Level();
 

@@ -22,24 +22,15 @@ Zeni::String getImageNameFromColor(const Uint32 color) {
 
 // TODO: implement
 Level::Level(Zeni::String fileName) {
-	Zeni::Image levelImage = Zeni::Image("levels/lvl1.png");
+	m_tileSize = Zeni::Vector2f(32.0, 32.0);
 	for (long i=1; Zeni::get_Textures().find(i); i++) {
 		m_numTextures = i;
 	}
-	m_tileSize = Zeni::Vector2f(32.0, 32.0);
-	/*Zeni::String fileData;
-	Zeni::File_Ops::load_asset(fileData, fileName);
-	std::string s = "";
-	for (int i=0; i<fileData.size(); i++) {
-		if (fileData[i] != '\r') {
-			s += fileData[i];
-		}
-	}
-	std::istringstream fileDataStream(s);
-	std::string line;*/
+
+	Zeni::Image levelImage = Zeni::Image(fileName + "-tiles.png");
 	for (int y=0; y < levelImage.height(); y++) {
 		for (int x=0; x < levelImage.width(); x++) {
-			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), getImageNameFromColor(levelImage.extract_RGBA(Zeni::Point2i(x, y))));
+			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), m_tileSize, getImageNameFromColor(levelImage.extract_RGBA(Zeni::Point2i(x, y))));
 			setTile(newTile);
 		}
 	}

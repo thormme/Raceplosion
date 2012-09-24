@@ -9,19 +9,21 @@
 using namespace Zeni;
 
 PlayState::PlayState()
-	  : m_timePassed(0.0f),
-		m_level() {
+	  : m_timePassed(0.0f) {
     set_pausable(true);
 	m_chronometer.start();
 	addBody(new RaceCar());
 	//addBody(new RaceCar(Zeni::Point2f(100.0, 100.0)));
 	m_viewports.push_back(Viewport(Zeni::Point2f(), Zeni::Vector2f(1.0f, 1.0f)));
+	m_level = nullptr;
+	loadLevel("levels/level1");
 }
 
 PlayState::~PlayState() {
 	for (int i=0; i < m_bodies.size(); i++) {
 		delete m_bodies[i];
 	}
+	delete m_level;
 }
 
 void PlayState::addBody(Body * body) {
@@ -33,8 +35,47 @@ void PlayState::removeBody(Body * body) {
 		if (m_bodies[i] == body) {
 			delete m_bodies[i];
 			m_bodies.erase(m_bodies.begin() + i);
+			return;
 		}
 	}
+}
+
+void PlayState::loadLevel(Zeni::String fileName) {
+	if (m_level != nullptr) delete m_level;
+	m_level = new Level(fileName);
+
+	while (!m_bodies.empty()) {
+		removeBody(m_bodies[0]);
+	}
+	Zeni::Image entitiesImage = Zeni::Image(fileName + "-entities.png");
+	for (int y=0; y < entitiesImage.height(); y++) {
+		for (int x=0; x < entitiesImage.width(); x++) {
+			Uint32 color = entitiesImage.extract_RGBA(Zeni::Point2i(x, y));
+			if (color == 0x00FF00FF) {
+				RaceCar* car = new RaceCar(Zeni::Point2f(x*32.0, y*32.0));
+				addBody(car);
+				m_trackedBodies.push_back(car);
+			}
+		}
+	}
+	/*Zeni::String fileData;
+	Zeni::File_Ops::load_asset(fileData, fileName + ".entities");
+	std::string s = "";
+	for (int i=0; i<fileData.size(); i++) {
+		if (fileData[i] != '\r') {
+			s += fileData[i];
+		}
+	}
+	std::istringstream fileDataStream(s);
+	std::string line;
+	for (int y=0; std::getline(fileDataStream, line); y++) {
+		std::istringstream lineStream(line);
+		std::string tile;
+		for (int x=0; std::getline(lineStream, tile, ','); x++) {
+			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), Zeni::String(tile));
+			setTile(newTile);
+		}
+	}*/
 }
 
 void PlayState::applyStateModifications(StateModifications &stateModifications) {
@@ -45,7 +86,7 @@ void PlayState::applyStateModifications(StateModifications &stateModifications) 
 		removeBody(*it);
 	}
 	for (std::list<Tile>::iterator it = stateModifications.tileChanges.begin(); it != stateModifications.tileChanges.end(); it++) {
-		m_level.changeTile(*it);
+		m_level->changeTile(*it);
 	}
 }
 
@@ -77,7 +118,7 @@ void PlayState::perform_logic() {
 	std::vector<std::vector<Body*>> bodyCollisions = getBodyCollisions();
     for (int i=0; i < m_bodies.size(); i++) {
 		std::vector<Tile*> tileCollisions;
-		if (m_bodies[i]->willDetectCollisionsWithTiles()) tileCollisions = m_level.getCollidingTiles(*m_bodies[i]);
+		if (m_bodies[i]->willDetectCollisionsWithTiles()) tileCollisions = m_level->getCollidingTiles(*m_bodies[i]);
 		m_bodies[i]->handleCollisions(timeStep, tileCollisions, bodyCollisions[i]);
 		Actor * actor = dynamic_cast<Actor*>(m_bodies[i]);
 		if (actor != nullptr) {
@@ -125,6 +166,6 @@ void PlayState::render() {
 		Zeni::Point2f upperLeft = m_bodies[playerNum]->getPosition() - Zeni::Vector2f(600.0f, viewHeight) + directionalOffset;
 		Zeni::Point2f lowerRight = m_bodies[playerNum]->getPosition() + Zeni::Vector2f(600.0f, viewHeight) + directionalOffset;*/
 			
-		it->render(m_level, m_bodies);
+		it->render(*m_level, m_bodies);
 	}
 }

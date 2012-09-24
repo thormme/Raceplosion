@@ -82,4 +82,8 @@ The following things are unsupported:
     <filepath>textures/grass.png</filepath>
     <tile>1</tile>
   </grass>
+  <weapon_rocket>
+    <filepath>textures/weapon_rocket.png</filepath>
+    <tile>0</tile>
+  </weapon_rocket>
 </Textures>

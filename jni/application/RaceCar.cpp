@@ -5,6 +5,7 @@
 #include "RaceCar.h"
 #include "Input.h"
 #include "PlayState.h"
+#include "Rocket.h"
 
 namespace {
 	const double FRICTION_COEFFICIENT = 1000.0;
@@ -27,11 +28,11 @@ const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, 
 	m_wheelRotation = 0;
 
 	if (Input::isKeyDown(SDLK_UP)) {
-		setForce(Zeni::Vector2f(cos(getRotation()), sin(getRotation())) * 200);
+		setForce(getRotationVector() * 200);
 	}
 
 	if (Input::isKeyDown(SDLK_DOWN)) {
-		setForce(Zeni::Vector2f(cos(getRotation()), sin(getRotation())) * -200);
+		setForce(getRotationVector() * -200);
 	}
 
 	if (Input::isKeyDown(SDLK_LEFT)) {
@@ -43,12 +44,14 @@ const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, 
 	}
 
 	if (Input::isKeyPressed(SDLK_w)) {
-		stateModifications.bodyAdditions.push_back(new Body(getPosition()));
+		Rocket * rocket = new Rocket(getCenter(), getRotation(), getVelocity());
+		rocket->setPosition(rocket->getPosition() - rocket->getSize()/2.0f);
+		stateModifications.bodyAdditions.push_back(rocket);
 	}
 
 	if (Input::isKeyDown(SDLK_q)) {
 		for (std::vector<Tile*>::const_iterator it = tileCollisions.begin(); it != tileCollisions.end(); it++) {
-			Tile newTile = Tile((*it)->getPosition(), Zeni::String("grass"));
+			Tile newTile = Tile((*it)->getPosition(), (*it)->getSize(), Zeni::String("grass"));
 			stateModifications.tileChanges.push_back(newTile);
 		}
 	}
@@ -79,16 +82,16 @@ void RaceCar::stepPhysics(const double timeStep) {
 void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies) {
 	m_friction = 0;
 	for (int i=0; i < tiles.size(); i++) {
-		if (tiles[i]->getImage().compare("placeholder") == 0) {
+		if (tiles[i]->isSolid()) {
 			// Hit a wall
 			std::list<Zeni::Point2f> points;
-			// TODO:: Store size in tile so that these assumptions don't have to be made.
+			// TODO: Store bounding points in tile so that these assumptions don't have to be made.
 			points.push_back(tiles[i]->getPosition());
-			points.push_back(tiles[i]->getPosition() + Zeni::Vector2f(32.0, 32.0));
-			points.push_back(Zeni::Point2f(tiles[i]->getPosition().x + Zeni::Vector2f(32.0, 32.0).i, tiles[i]->getPosition().y));
-			points.push_back(Zeni::Point2f(tiles[i]->getPosition().x, tiles[i]->getPosition().y +Zeni::Vector2f(32.0, 32.0).j));
+			points.push_back(tiles[i]->getPosition() + tiles[i]->getSize());
+			points.push_back(Zeni::Point2f(tiles[i]->getPosition().x + tiles[i]->getSize().i, tiles[i]->getPosition().y));
+			points.push_back(Zeni::Point2f(tiles[i]->getPosition().x, tiles[i]->getPosition().y +tiles[i]->getSize().j));
 			Collision collision = getCollision(points, true);
-			Zeni::Vector2f velocityTowardTile = getDirectionalVelocity(Utils::getAngleFromVector((tiles[i]->getPosition() + Zeni::Vector2f(16.0, 16.0)) - getCenter()));
+			Zeni::Vector2f velocityTowardTile = getDirectionalVelocity(Utils::getAngleFromVector((tiles[i]->getPosition() + tiles[i]->getSize()/2.0f) - getCenter()));
 			setVelocity(getVelocity() - velocityTowardTile);
 			double heightDifference = getSize().j/2.0 - collision.heightDistanceVector.magnitude();
 			double widthDifference = getSize().i/2.0 - collision.widthDistanceVector.magnitude();
@@ -112,6 +115,7 @@ RaceCar::RaceCar(const Zeni::Point2f &position,
 	m_wheelSeparation = 64.0;
 	detectCollisionsWithBodies();
 	detectCollisionsWithTiles();
+	m_startPosition = getPosition();
 }
 
 // If you might delete base class pointers, you need a virtual destructor.

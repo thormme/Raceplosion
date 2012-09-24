@@ -17,8 +17,7 @@ Body::Body(const Zeni::Point2f &position,
 	m_detectCollisionsWithBodies = false;
 }
 
-Body::~Body() {
-}
+//Body::~Body() {}
 
 void Body::render() {
 	/*std::pair<Zeni::Point2f, Zeni::Point2f> boundingBox = getBoundingBox();

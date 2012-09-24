@@ -73,7 +73,7 @@ public:
 	const bool willDetectCollisionsWithTiles() const;
 	const bool willDetectCollisionsWithBodies() const;
 
-	virtual ~Body();
+	//virtual ~Body();
 };
 #endif
 
