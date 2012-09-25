@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "Utils.h"
 #include "Body.h"
+#include "GameObject.h"
 #include "Tile.h"
 
 Body::Body(const Zeni::Point2f &position,
@@ -11,7 +12,7 @@ Body::Body(const Zeni::Point2f &position,
 		const Zeni::Vector2f &velocity,
 		const Zeni::Vector2f &force,
 		const double &mass)
-		:m_position(position), m_size(size), m_rotation(rotation), m_image(image), m_velocity(velocity), m_force(force), m_mass(mass) {
+		:GameObject(position, size), m_rotation(rotation), m_image(image), m_velocity(velocity), m_force(force), m_mass(mass) {
 	m_rotationRate = 0;
 	m_detectCollisionsWithTiles = false;
 	m_detectCollisionsWithBodies = false;
@@ -31,11 +32,11 @@ void Body::render() {
     vr.render(quad);*/
 	render_image(
       m_image, // which texture to use
-      m_position, // upper-left corner
-      m_position + m_size, // lower-right corner
+      getPosition(), // upper-left corner
+      getPosition() + getSize(), // lower-right corner
       -m_rotation, // rotation in radians
       1.0f, // scaling factor
-      m_position + 0.5f * m_size, // point to rotate & scale about
+      getPosition() + 0.5f * getSize(), // point to rotate & scale about
       false, // whether or not to horizontally flip the texture
       Zeni::Color()); // what Color to "paint" the texture
 }
@@ -44,15 +45,11 @@ void Body::stepPhysics(const double timeStep) {
 	m_rotation += m_rotationRate * timeStep;
 	Zeni::Vector2f acceleration = m_force / m_mass;
 	m_velocity += acceleration * timeStep;
-	m_position += m_velocity * timeStep;
+	setPosition(getPosition() + m_velocity * timeStep);
 }
 
 void Body::handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies) {
 	// TODO: implement
-}
-
-void Body::setPosition(const Zeni::Point2f position) {
-	m_position = position;
 }
 
 void Body::setVelocity(const Zeni::Vector2f velocity) {
@@ -79,14 +76,6 @@ void Body::detectCollisionsWithBodies() {
 	m_detectCollisionsWithBodies = true;
 }
 
-const Zeni::Point2f Body::getPosition() const {
-	return m_position;
-}
-
-const Zeni::Vector2f Body::getSize() const {
-	return m_size;
-}
-
 const std::pair<Zeni::Point2f, Zeni::Point2f> Body::getBoundingBox() const {
 	Zeni::Point2f center = getCenter();
 	Zeni::Vector2f halfSize = getSize()/2.0;
@@ -98,8 +87,17 @@ const std::pair<Zeni::Point2f, Zeni::Point2f> Body::getBoundingBox() const {
 						  Zeni::Point2f(center.x + boundingX, center.y + boundingY));
 }
 
-const Zeni::Point2f Body::getCenter() const {
-	return getSize()/2.0 + getPosition();
+const std::list<Zeni::Point2f> Body::getBoundingPoints() const {
+	Zeni::Point2f position = getPosition();
+	Zeni::Point2f size = getSize();
+	Zeni::Vector2f perpendicularVector = Utils::getVectorFromAngle(getRotation() + Utils::PI/2.0) * getSize().j/2.0f;
+	Zeni::Vector2f parallelVector = getRotationVector() * getSize().i/2.0f;
+	std::list<Zeni::Point2f> points;
+	points.push_back(perpendicularVector + parallelVector + getPosition());
+	points.push_back(perpendicularVector - parallelVector + getPosition());
+	points.push_back(-perpendicularVector + parallelVector + getPosition());
+	points.push_back(-perpendicularVector - parallelVector + getPosition());
+	return points;
 }
 
 const Zeni::Vector2f Body::getVelocity() const {
@@ -115,31 +113,18 @@ const double Body::getMass() const {
 }
 
 // TODO: implement
-const bool Body::isTouching(const Body &body) const {
+const bool Body::isTouching(const GameObject &object) const {
 	// Radius test
-	Zeni::Point2f bodyCenter = body.getCenter();
-	Zeni::Point2f center = getCenter();
-	double distance = (center - bodyCenter).magnitude();
-	return distance < (body.getSize()/2.0 + getSize()/2.0).magnitude();
-}
-
-// TODO: improve
-const bool Body::isTouching(const Zeni::Point2f &position, const Zeni::Vector2f &size) const {
-	// Radius bounding box test
-	std::pair<Zeni::Point2f, Zeni::Point2f> boundingBox = getBoundingBox();
-	if (position.x > boundingBox.second.x ||
-		position.y > boundingBox.second.y ||
-		position.x + size.i < boundingBox.first.x ||
-		position.y + size.j < boundingBox.first.y) {
+	std::pair<Zeni::Point2f, Zeni::Point2f> thisBoundingBox = getBoundingBox();
+	std::pair<Zeni::Point2f, Zeni::Point2f> otherBoundingBox = object.getBoundingBox();
+	if (otherBoundingBox.first.x > thisBoundingBox.second.x ||
+		otherBoundingBox.first.y > thisBoundingBox.second.y ||
+		otherBoundingBox.second.x < thisBoundingBox.first.x ||
+		otherBoundingBox.second.y < thisBoundingBox.first.y) {
 		return false;
 	}
 	// Test whether corners intersect body
-	std::list<Zeni::Point2f> points;
-	points.push_back(position);
-	points.push_back(position + size);
-	points.push_back(Zeni::Point2f(position.x + size.x, position.y));
-	points.push_back(Zeni::Point2f(position.x, position.y + size.y));
-	return getCollision(points).isColliding;
+	return getCollision(object.getBoundingPoints()).isColliding || object.getCollision(getBoundingPoints()).isColliding;
 }
 
 const Collision Body::getCollision(const std::list<Zeni::Point2f> &points, const bool nearest) const {
@@ -154,17 +139,18 @@ const Collision Body::getCollision(const std::list<Zeni::Point2f> &points, const
 		if (widthDistanceVector.magnitude() <= width) {
 			Zeni::Vector2f heightDistanceVector = (difference * perpendicularDirectionVector) / directionVector.magnitude() * perpendicularDirectionVector;
 			if (heightDistanceVector.magnitude() <= height) {
+				double heightDifference = getSize().j/2.0 - heightDistanceVector.magnitude();
+				double widthDifference = getSize().i/2.0 - widthDistanceVector.magnitude();
+				Zeni::Vector2f minimumSeparation = heightDifference < widthDifference ? heightDistanceVector.normalized()*heightDifference : widthDistanceVector.normalized()*widthDifference;
 				if (nearest) {
-					if (std::min(heightDistanceVector.magnitude2(), widthDistanceVector.magnitude2()) < std::min(nearestCollision.heightDistanceVector.magnitude2(), nearestCollision.widthDistanceVector.magnitude2())) {
+					if (minimumSeparation.magnitude2() < nearestCollision.minimumSeparation.magnitude2()) {
 						nearestCollision.isColliding = true;
-						nearestCollision.heightDistanceVector = heightDistanceVector;
-						nearestCollision.widthDistanceVector = widthDistanceVector;
+						nearestCollision.minimumSeparation = minimumSeparation;
 						nearestCollision.position = *it;
 					}
 				} else {
 					nearestCollision.isColliding = true;
-					nearestCollision.heightDistanceVector = heightDistanceVector;
-					nearestCollision.widthDistanceVector = widthDistanceVector;
+					nearestCollision.minimumSeparation = minimumSeparation;
 					nearestCollision.position = *it;
 					return nearestCollision;
 				}

@@ -3,7 +3,7 @@
 
 Tile::Tile(const Zeni::Point2f &position,
 		const Zeni::Vector2f &size,
-		const Zeni::String &image): GameObject(position, size, image) {
+		const Zeni::String &image): GameObject(position, size), m_image(image) {
 	m_imageId = Zeni::get_Textures().get_id(image);
 	size_t pos = image.find_first_of('-');
 	if (pos != std::string::npos) {
@@ -22,6 +22,9 @@ Tile::~Tile(){
 	GameObject::~GameObject();
 }
 
+const Zeni::String Tile::getImage() const {
+	return m_image;
+}
 const Zeni::String Tile::getType() const {
 	return m_type;
 }

@@ -130,7 +130,7 @@ const std::vector<Tile*> Level::getCollidingTiles(const Body &body) const {
 				continue;
 			}
 			Tile * tile = m_tiles[tileX][tileY];
-			if (body.isTouching(tile->getPosition(), m_tileSize)) {
+			if (body.isTouching(*tile)) {
 				tiles.push_back(tile);
 			}
 		}

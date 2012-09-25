@@ -84,20 +84,16 @@ void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, 
 	for (int i=0; i < tiles.size(); i++) {
 		if (tiles[i]->isSolid()) {
 			// Hit a wall
-			std::list<Zeni::Point2f> points;
-			// TODO: Store bounding points in tile so that these assumptions don't have to be made.
-			points.push_back(tiles[i]->getPosition());
-			points.push_back(tiles[i]->getPosition() + tiles[i]->getSize());
-			points.push_back(Zeni::Point2f(tiles[i]->getPosition().x + tiles[i]->getSize().i, tiles[i]->getPosition().y));
-			points.push_back(Zeni::Point2f(tiles[i]->getPosition().x, tiles[i]->getPosition().y +tiles[i]->getSize().j));
-			Collision collision = getCollision(points, true);
+			Collision collision = getCollision(tiles[i]->getBoundingPoints(), true);
+			Collision otherCollision = tiles[i]->getCollision(getBoundingPoints(), true);
+			if (otherCollision.minimumSeparation.magnitude2() < collision.minimumSeparation.magnitude2()) {
+				collision = otherCollision;
+				collision.minimumSeparation = -collision.minimumSeparation;
+			}
 			Zeni::Vector2f velocityTowardTile = getDirectionalVelocity(Utils::getAngleFromVector((tiles[i]->getPosition() + tiles[i]->getSize()/2.0f) - getCenter()));
 			setVelocity(getVelocity() - velocityTowardTile);
-			double heightDifference = getSize().j/2.0 - collision.heightDistanceVector.magnitude();
-			double widthDifference = getSize().i/2.0 - collision.widthDistanceVector.magnitude();
-			Zeni::Vector2f positionModifier = heightDifference < widthDifference ? collision.heightDistanceVector.normalized()*heightDifference : collision.widthDistanceVector.normalized()*widthDifference;
 			// TODO: This should NOT be necessary!
-			if (collision.isColliding) setPosition(getPosition() + positionModifier);
+			if (collision.isColliding) setPosition(getPosition() + collision.minimumSeparation);
 		}
 		if (tiles[i]->getImage().compare("grass") == 0) {
 			m_friction += .5;

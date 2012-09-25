@@ -6,6 +6,7 @@
 class Tile : public GameObject {
 
 private:
+	Zeni::String m_image;
 	Zeni::String m_type; // Name of the image to draw
 	long m_imageId;
 
@@ -19,6 +20,7 @@ public:
 	// If you might delete base class pointers, you need a virtual destructor.
 	virtual ~Tile();
 
+	const Zeni::String getImage() const;
 	const Zeni::String getType() const;
 	const long getImageId() const;
 

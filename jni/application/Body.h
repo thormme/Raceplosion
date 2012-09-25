@@ -4,24 +4,9 @@
 #include <limits>
 #include "Tile.h"
 
-struct Collision {
-	Zeni::Point2f position;
-	Zeni::Vector2f widthDistanceVector;
-	Zeni::Vector2f heightDistanceVector;
-
-	bool isColliding;
-
-	Collision() : position(), 
-		isColliding(false), 
-		widthDistanceVector(Zeni::Vector2f(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())), 
-		heightDistanceVector(Zeni::Vector2f(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())) {}
-};
-
-class Body {
+class Body : public GameObject {
 
 private:
-	Zeni::Point2f m_position; // Upper left corner
-	Zeni::Vector2f m_size; // (width, height)
 	double m_rotation; // Rotation of the Body
 	Zeni::String m_image; // Name of the image to draw
 	Zeni::Vector2f m_velocity;
@@ -47,7 +32,6 @@ public:
 	virtual void stepPhysics(const double timeStep); ///< Run the physics simulation on this object for one step.
 	virtual void handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies); ///< Run physics necessary to deal with collisions.
 
-	void setPosition(const Zeni::Point2f position);
 	void setVelocity(const Zeni::Vector2f velocity);
 	void setAcceleration(const Zeni::Vector2f acceleration);
 	void setForce(const Zeni::Vector2f force);
@@ -57,16 +41,13 @@ public:
 	void detectCollisionsWithTiles();
 	void detectCollisionsWithBodies();
 	
-	const Zeni::Point2f getPosition() const;
-	const Zeni::Vector2f getSize() const;
 	const std::pair<Zeni::Point2f, Zeni::Point2f> getBoundingBox() const;
-	const Zeni::Point2f getCenter() const;
+	const std::list<Zeni::Point2f> getBoundingPoints() const;
 	const Zeni::Vector2f getVelocity() const;
 	const Zeni::Vector2f getAcceleration() const;
 	const Zeni::Vector2f getForce() const;
 	const double getMass() const;
-	const bool isTouching(const Body &body) const;
-	const bool isTouching(const Zeni::Point2f &position, const Zeni::Vector2f &size) const;
+	const bool isTouching(const GameObject &object) const;
 	const Collision getCollision(const std::list<Zeni::Point2f> &points, const bool nearest = false) const;
 	const double getRotation() const;
 	const Zeni::Vector2f getRotationVector() const;

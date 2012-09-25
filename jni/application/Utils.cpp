@@ -9,6 +9,6 @@ const double Utils::getAngleFromVector(const Zeni::Vector2f &vector) {
 	return angle;
 }
 
-const Zeni::Vector2f getVectorFromAngle(const double &angle) {
+const Zeni::Vector2f Utils::getVectorFromAngle(const double angle) {
 	return Zeni::Vector2f(cos(angle), sin(angle));
 }
