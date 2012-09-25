@@ -423,6 +423,9 @@
     <ClInclude Include="..\..\jni\application\Utils.h">
       <Filter>jni\application</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\jni\application\Rocket.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\jni\application\bootstrap.cpp">
@@ -453,6 +456,9 @@
       <Filter>jni\application</Filter>
     </ClCompile>
     <ClCompile Include="..\..\jni\application\Utils.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\Rocket.cpp">
       <Filter>jni\application</Filter>
     </ClCompile>
   </ItemGroup>
