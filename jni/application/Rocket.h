@@ -6,6 +6,7 @@
 class Rocket : public Actor {
 	
 private:
+	Zeni::Chronometer<Zeni::Time> m_explosionTimer;
 
 protected:
 	virtual const StateModifications run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);

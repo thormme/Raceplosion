@@ -117,7 +117,7 @@ void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const{
 		vr.unapply_Texture();
 	}
 	str << chrono.seconds()*1000.0 << "\n";
-    OutputDebugString( str.str().c_str());
+    //OutputDebugString( str.str().c_str());
 }
 
 const std::vector<Tile*> Level::getCollidingTiles(const Body &body) const {

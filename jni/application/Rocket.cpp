@@ -9,6 +9,7 @@ Rocket::Rocket(const Zeni::Point2f &position,
 	setForce(getRotationVector() * 500);
 	detectCollisionsWithBodies();
 	detectCollisionsWithTiles();
+	m_explosionTimer.start();
 }
 
 const StateModifications Rocket::run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
@@ -19,6 +20,9 @@ const StateModifications Rocket::run(const std::vector<Tile*> &tileCollisions, c
 			explode = true;
 			break;
 		}
+	}
+	if (bodyCollisions.size() && m_explosionTimer.seconds() > .6) {
+		explode = true;
 	}
 	if (explode) {
 		for (std::vector<Tile*>::const_iterator it = tileCollisions.begin(); it != tileCollisions.end(); it++) {

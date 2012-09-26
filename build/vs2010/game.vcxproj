@@ -219,6 +219,7 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
   <ItemGroup>
     <ClInclude Include="..\..\jni\application\Actor.h" />
     <ClInclude Include="..\..\jni\application\Body.h" />
+    <ClInclude Include="..\..\jni\application\GameObject.h" />
     <ClInclude Include="..\..\jni\application\Input.h" />
     <ClInclude Include="..\..\jni\application\Level.h" />
     <ClInclude Include="..\..\jni\application\PlayState.h" />
@@ -345,6 +346,7 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
     <ClCompile Include="..\..\jni\application\Body.cpp" />
     <ClCompile Include="..\..\jni\application\bootstrap.cpp">
     </ClCompile>
+    <ClCompile Include="..\..\jni\application\GameObject.cpp" />
     <ClCompile Include="..\..\jni\application\Input.cpp" />
     <ClCompile Include="..\..\jni\application\Level.cpp" />
     <ClCompile Include="..\..\jni\application\PlayState.cpp" />

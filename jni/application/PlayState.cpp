@@ -47,18 +47,8 @@ void PlayState::loadLevel(Zeni::String fileName) {
 	while (!m_bodies.empty()) {
 		removeBody(m_bodies[0]);
 	}
-	Zeni::Image entitiesImage = Zeni::Image(fileName + "-entities.png");
-	for (int y=0; y < entitiesImage.height(); y++) {
-		for (int x=0; x < entitiesImage.width(); x++) {
-			Uint32 color = entitiesImage.extract_RGBA(Zeni::Point2i(x, y));
-			if (color == 0x00FF00FF) {
-				RaceCar* car = new RaceCar(Zeni::Point2f(x*32.0, y*32.0));
-				addBody(car);
-				m_trackedBodies.push_back(car);
-			}
-		}
-	}
-	/*Zeni::String fileData;
+
+	Zeni::String fileData;
 	Zeni::File_Ops::load_asset(fileData, fileName + ".entities");
 	std::string s = "";
 	for (int i=0; i<fileData.size(); i++) {
@@ -70,12 +60,16 @@ void PlayState::loadLevel(Zeni::String fileName) {
 	std::string line;
 	for (int y=0; std::getline(fileDataStream, line); y++) {
 		std::istringstream lineStream(line);
-		std::string tile;
-		for (int x=0; std::getline(lineStream, tile, ','); x++) {
-			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), Zeni::String(tile));
-			setTile(newTile);
+		std::string objectType;
+		lineStream >> objectType;
+		if (objectType == "RaceCar") {
+			float x, y, rotation;
+			lineStream >> x >> y >> rotation;
+			RaceCar* car = new RaceCar(Zeni::Point2f(x*32.0, y*32.0));
+			addBody(car);
+			m_trackedBodies.push_back(car);
 		}
-	}*/
+	}
 }
 
 void PlayState::applyStateModifications(StateModifications &stateModifications) {
@@ -135,10 +129,6 @@ void PlayState::perform_logic() {
 	applyStateModifications(stateModifications);
 
 	Input::stepInput();
-
-	std::ostringstream str;
-	str << m_bodies.size() << "\n";
-    OutputDebugString( str.str().c_str());
 }
 
 void PlayState::on_push() {

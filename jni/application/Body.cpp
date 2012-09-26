@@ -93,10 +93,10 @@ const std::list<Zeni::Point2f> Body::getBoundingPoints() const {
 	Zeni::Vector2f perpendicularVector = Utils::getVectorFromAngle(getRotation() + Utils::PI/2.0) * getSize().j/2.0f;
 	Zeni::Vector2f parallelVector = getRotationVector() * getSize().i/2.0f;
 	std::list<Zeni::Point2f> points;
-	points.push_back(perpendicularVector + parallelVector + getPosition());
-	points.push_back(perpendicularVector - parallelVector + getPosition());
-	points.push_back(-perpendicularVector + parallelVector + getPosition());
-	points.push_back(-perpendicularVector - parallelVector + getPosition());
+	points.push_back(perpendicularVector + parallelVector + getCenter());
+	points.push_back(perpendicularVector - parallelVector + getCenter());
+	points.push_back(-perpendicularVector + parallelVector + getCenter());
+	points.push_back(-perpendicularVector - parallelVector + getCenter());
 	return points;
 }
 
