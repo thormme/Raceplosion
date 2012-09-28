@@ -429,6 +429,9 @@
     <ClInclude Include="..\..\jni\application\GameObject.h">
       <Filter>jni\application</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\jni\application\Waypoint.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\jni\application\bootstrap.cpp">
@@ -465,6 +468,9 @@
       <Filter>jni\application</Filter>
     </ClCompile>
     <ClCompile Include="..\..\jni\application\GameObject.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\Waypoint.cpp">
       <Filter>jni\application</Filter>
     </ClCompile>
   </ItemGroup>

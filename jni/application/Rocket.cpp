@@ -36,5 +36,3 @@ const StateModifications Rocket::run(const std::vector<Tile*> &tileCollisions, c
 
 //void Rocket::stepPhysics(const double timeStep){}
 //void Rocket::handleCollisions(const double timeStep, std::vector<Tile*>, std::vector<Body*>){}
-
-//Rocket::~Rocket(){}

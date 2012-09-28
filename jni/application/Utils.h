@@ -7,5 +7,12 @@ namespace Utils {
 
 	const double getAngleFromVector(const Zeni::Vector2f &vector);
 	const Zeni::Vector2f getVectorFromAngle(const double angle);
+
+	template <class T>
+	void printDebugMessage(T message) {
+		std::ostringstream str;
+		str << message;
+		OutputDebugString(str.str().c_str());
+	}
 }
 #endif

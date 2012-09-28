@@ -69,6 +69,3 @@ const Collision GameObject::getCollision(const std::list<Zeni::Point2f> &points,
 	}
 	return nearestCollision;
 }
-
-GameObject::~GameObject() {
-}

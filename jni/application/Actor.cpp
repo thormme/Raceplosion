@@ -30,6 +30,3 @@ const StateModifications Actor::act(const std::vector<Tile*> &tileCollisions, co
 
 	return stateModifications;
 }
-
-// If you might delete base class pointers, you need a virtual destructor.
-Actor::~Actor() {}

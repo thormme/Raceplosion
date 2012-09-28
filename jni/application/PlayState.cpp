@@ -3,8 +3,10 @@
 #include "PlayState.h"
 #include "Level.h"
 #include "RaceCar.h"
+#include "Waypoint.h"
 #include "Actor.h"
 #include "Input.h"
+#include "Utils.h"
 
 using namespace Zeni;
 
@@ -12,7 +14,7 @@ PlayState::PlayState()
 	  : m_timePassed(0.0f) {
     set_pausable(true);
 	m_chronometer.start();
-	addBody(new RaceCar());
+	//addBody(new RaceCar());
 	//addBody(new RaceCar(Zeni::Point2f(100.0, 100.0)));
 	m_viewports.push_back(Viewport(Zeni::Point2f(), Zeni::Vector2f(1.0f, 1.0f)));
 	m_level = nullptr;
@@ -31,12 +33,16 @@ void PlayState::addBody(Body * body) {
 }
 	
 void PlayState::removeBody(Body * body) {
-	for (int i=0; i < m_bodies.size(); i++) {
-		if (m_bodies[i] == body) {
-			delete m_bodies[i];
-			m_bodies.erase(m_bodies.begin() + i);
-			return;
+	Body* removalBody = nullptr;
+	for (std::vector<Body*>::iterator it = m_bodies.begin(); it != m_bodies.end(); it++) {
+		if (*it == body) {
+			Body* removalBody = *it;
+			m_bodies.erase(it);
+			break;
 		}
+	}
+	if (removalBody != nullptr) {
+		delete removalBody;
 	}
 }
 
@@ -68,6 +74,13 @@ void PlayState::loadLevel(Zeni::String fileName) {
 			RaceCar* car = new RaceCar(Zeni::Point2f(x*32.0, y*32.0));
 			addBody(car);
 			m_trackedBodies.push_back(car);
+		} else if (objectType == "Waypoint") {
+			float x, y, rotation, width;
+			lineStream >> x >> y >> rotation >> width;
+			Waypoint* waypoint = new Waypoint(Zeni::Point2f(x*32.0, y*32.0), Zeni::Vector2f(32.0f*width, 32.0f), rotation/180.0f*Utils::PI);
+			waypoint->setPosition(waypoint->getPosition());
+			addBody(waypoint);
+			m_waypoints.push_back(waypoint);
 		}
 	}
 }
@@ -101,7 +114,7 @@ const std::vector<std::vector<Body*>> PlayState::getBodyCollisions() {
 
 void PlayState::perform_logic() {
     const float timePassed = m_chronometer.seconds();
-    const float timeStep = timePassed - m_timePassed;
+	const float timeStep = std::min(timePassed - m_timePassed, 50.0f/1000.0f);
     m_timePassed = timePassed;
 
 	StateModifications stateModifications = StateModifications();
@@ -120,12 +133,23 @@ void PlayState::perform_logic() {
 		}
 	}
 
-	for (std::vector<Viewport>::iterator it = m_viewports.begin(); it != m_viewports.end(); it++) {
-		Zeni::Vector2f directionalOffset = Zeni::Vector2f(600.0f/3.0, 500.0f/3.0).multiply_by(m_bodies[0]->getRotationVector());
-		it->stepViewportPosition(timeStep, m_bodies[0]->getPosition() - Zeni::Vector2f(600.0f, 500.0f) + directionalOffset);
+	for (int i = 0; i < m_viewports.size(); i++) {
+		Zeni::Vector2f directionalOffset = Zeni::Vector2f(600.0f/3.0, 500.0f/3.0).multiply_by(m_trackedBodies[i]->getRotationVector());
+		m_viewports[i].stepViewportPosition(timeStep, m_trackedBodies[i]->getPosition() - Zeni::Vector2f(600.0f, 500.0f) + directionalOffset);
+	}
+	for (int i = 0; i < m_trackedBodies.size(); i++) {
+		RaceCar * car = dynamic_cast<RaceCar*>(m_trackedBodies[i]);
+		if (car != nullptr) {
+			/*Utils::printDebugMessage(car->getPassedWaypoints().size());
+			Utils::printDebugMessage(" waypoints\n");*/
+			if (car->getPassedWaypoints().size() == m_waypoints.size() && car->isTouching(*m_waypoints[0])) {
+				car->setLapCompleted();
+				/*Utils::printDebugMessage(car->getCompletedLaps());
+				Utils::printDebugMessage(" laps\n");*/
+			}
+		}
 	}
 	
-
 	applyStateModifications(stateModifications);
 
 	Input::stepInput();

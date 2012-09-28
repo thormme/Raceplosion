@@ -18,18 +18,7 @@ Body::Body(const Zeni::Point2f &position,
 	m_detectCollisionsWithBodies = false;
 }
 
-//Body::~Body() {}
-
 void Body::render() {
-	/*std::pair<Zeni::Point2f, Zeni::Point2f> boundingBox = getBoundingBox();
-	Zeni::Video &vr = Zeni::get_Video();
-	Zeni::Vertex2f_Color v0(boundingBox.first, Zeni::Color(1.f,1.f,0.f,0.f));
-    Zeni::Vertex2f_Color v1(Zeni::Point2f(boundingBox.first.x, boundingBox.second.y), Zeni::get_Colors()["blue"]);
-    Zeni::Vertex2f_Color v2(boundingBox.second, Zeni::get_Colors()["green"]);
-    Zeni::Vertex2f_Color v3(Zeni::Point2f(boundingBox.second.x, boundingBox.first.y), Zeni::Color());
-
-    Zeni::Quadrilateral<Zeni::Vertex2f_Color> quad(v0, v1, v2, v3);
-    vr.render(quad);*/
 	render_image(
       m_image, // which texture to use
       getPosition(), // upper-left corner

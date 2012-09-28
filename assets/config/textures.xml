@@ -86,4 +86,8 @@ The following things are unsupported:
     <filepath>textures/weapon_rocket.png</filepath>
     <tile>0</tile>
   </weapon_rocket>
+  <waypoint>
+    <filepath>textures/waypoint.png</filepath>
+    <tile>0</tile>
+  </waypoint>
 </Textures>

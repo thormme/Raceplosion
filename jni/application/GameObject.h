@@ -33,7 +33,6 @@ public:
 	const Zeni::Point2f getCenter() const;
 	virtual const Collision getCollision(const std::list<Zeni::Point2f> &points, const bool nearest = false) const;
 
-	virtual ~GameObject();
 };
 #endif
 

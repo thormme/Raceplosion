@@ -102,6 +102,35 @@ void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, 
 		}
 	}
 	if (tiles.size()) m_friction /= tiles.size();
+
+	for (std::vector<Body*>::iterator it = bodies.begin(); it != bodies.end(); it++) {
+		Waypoint * waypoint = dynamic_cast<Waypoint*>(*it);
+		if (waypoint != nullptr) {
+			bool notYetSeen = true;
+			for (std::vector<Waypoint*>::iterator waypointIterator = m_passedWaypoints.begin(); waypointIterator != m_passedWaypoints.end(); waypointIterator++) {
+				if (*waypointIterator == waypoint) {
+					notYetSeen = false;
+					break;
+				}
+			}
+			if (notYetSeen) {
+				m_passedWaypoints.push_back(waypoint);
+			}
+		}
+	}
+}
+
+const int RaceCar::getCompletedLaps() const {
+	return m_completedLaps;
+}
+
+const std::vector<Waypoint*> RaceCar::getPassedWaypoints() const {
+	return m_passedWaypoints;
+}
+
+void RaceCar::setLapCompleted() {
+	m_passedWaypoints.clear();
+	m_completedLaps++;
 }
 
 RaceCar::RaceCar(const Zeni::Point2f &position,
@@ -112,7 +141,5 @@ RaceCar::RaceCar(const Zeni::Point2f &position,
 	detectCollisionsWithBodies();
 	detectCollisionsWithTiles();
 	m_startPosition = getPosition();
+	m_completedLaps = 0;
 }
-
-// If you might delete base class pointers, you need a virtual destructor.
-RaceCar::~RaceCar() {}

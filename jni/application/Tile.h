@@ -17,9 +17,6 @@ public:
 		const Zeni::Vector2f &size = Zeni::Vector2f(32.0f, 32.0f),
 		const Zeni::String &image = "placeholder");
 
-	// If you might delete base class pointers, you need a virtual destructor.
-	virtual ~Tile();
-
 	const Zeni::String getImage() const;
 	const Zeni::String getType() const;
 	const long getImageId() const;

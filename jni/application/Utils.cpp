@@ -1,5 +1,6 @@
 #include <zenilib.h>
 #include <cmath>
+#include <sstream>
 #include "Utils.h"
 
 const double Utils::getAngleFromVector(const Zeni::Vector2f &vector) {

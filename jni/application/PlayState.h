@@ -4,6 +4,7 @@
 #include "Level.h"
 #include "Actor.h"
 #include "Viewport.h"
+#include "Waypoint.h"
 
 class PlayState : public Zeni::Gamestate_Base {
 	PlayState(const PlayState &);
@@ -17,6 +18,7 @@ public:
 private:
 	Level* m_level;
 	std::vector<Body*> m_bodies;
+	std::vector<Waypoint*> m_waypoints;
 	std::vector<Body*> m_trackedBodies;
 	std::vector<Viewport> m_viewports;
 	Zeni::Chronometer<Zeni::Time> m_chronometer;

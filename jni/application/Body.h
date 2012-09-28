@@ -53,8 +53,6 @@ public:
 	const Zeni::Vector2f getRotationVector() const;
 	const bool willDetectCollisionsWithTiles() const;
 	const bool willDetectCollisionsWithBodies() const;
-
-	//virtual ~Body();
 };
 #endif
 

@@ -2,6 +2,7 @@
 #define RACECAR_H
 #include <zenilib.h>
 #include "Actor.h"
+#include "Waypoint.h"
 
 class RaceCar : public Actor {
 	
@@ -11,6 +12,8 @@ private:
 	double m_friction;
 	Zeni::Point2f m_startPosition;
 	Zeni::Point2f m_lastGroundPosition;
+	std::vector<Waypoint*> m_passedWaypoints;
+	int m_completedLaps;
 
 	const Zeni::Vector2f getHorizontalFrictionForce();
 	const Zeni::Vector2f getDirectionalVelocity(const double &direction);
@@ -26,6 +29,9 @@ public:
 	virtual void stepPhysics(const double timeStep);
 	virtual void handleCollisions(const double timeStep, std::vector<Tile*>, std::vector<Body*>); ///< Run physics necessary to deal with collisions.
 
-	virtual ~RaceCar();
+	const int getCompletedLaps() const;
+	const std::vector<Waypoint*> getPassedWaypoints() const;
+
+	void setLapCompleted();
 };
 #endif

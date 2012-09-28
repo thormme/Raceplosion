@@ -18,10 +18,6 @@ Tile::Tile(const Zeni::Point2f &position,
 	}
 }
 
-Tile::~Tile(){
-	GameObject::~GameObject();
-}
-
 const Zeni::String Tile::getImage() const {
 	return m_image;
 }

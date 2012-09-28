@@ -79,18 +79,12 @@ void Level::setTile(Tile tile) {
 
 void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const{
 	Zeni::Video &vr = Zeni::get_Video();
-	Zeni::Chronometer<Zeni::Time> chrono;
-	chrono.start();
-	chrono.reset();
-	std::ostringstream str;
 	Zeni::Vector2f tileScreenEdge((int)((screenSize.x + offset.x)/m_tileSize.i) + 1, (int)((screenSize.y + offset.y)/m_tileSize.j) + 1);
 	std::vector<std::vector<Tile*>> tileVectors;
 	for (int i=0; i < m_numTextures; i++) {
 		std::vector<Tile*> tiles;
 		tileVectors.push_back(tiles);
 	}
-	str << chrono.seconds()*1000.0 << " ";
-	chrono.reset();
 	for (int tileX = offset.x/m_tileSize.i; tileX < tileScreenEdge.i; tileX++) {
 		for (int tileY = offset.y/m_tileSize.j; tileY < tileScreenEdge.j; tileY++) {
 			if (tileX >= m_tiles.size() || tileY >= m_tiles[tileX].size()) {
@@ -100,8 +94,6 @@ void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const{
 			tileVectors[tile->getImageId() - 1].push_back(tile);
 		}
 	}
-	str << chrono.seconds()*1000.0 << " ";
-	chrono.reset();
 	for (int i = 0; i < m_numTextures; i++) {
 		vr.apply_Texture(Zeni::get_Textures()[i + 1]);
 		std::vector<Tile*> tiles = tileVectors[i];
@@ -116,8 +108,6 @@ void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const{
 		}
 		vr.unapply_Texture();
 	}
-	str << chrono.seconds()*1000.0 << "\n";
-    //OutputDebugString( str.str().c_str());
 }
 
 const std::vector<Tile*> Level::getCollidingTiles(const Body &body) const {

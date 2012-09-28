@@ -34,7 +34,5 @@ public:
 		 const double &mass = 1.0);
 
 	const StateModifications act(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);
-
-	virtual ~Actor();
 };
 #endif
