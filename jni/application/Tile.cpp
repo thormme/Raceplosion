@@ -11,10 +11,15 @@ Tile::Tile(const Zeni::Point2f &position,
 	} else {
 		m_type = image;
 	}
-	if (m_type == "placeholder") {
+	if (m_type == "placeholder" || m_type == "wall") {
 		m_solid = true;
 	} else {
 		m_solid = false;
+	}
+	if (m_type == "black") {
+		m_pit = true;
+	} else {
+		m_pit = false;
 	}
 }
 
@@ -29,4 +34,7 @@ const long Tile::getImageId() const {
 }
 const bool Tile::isSolid() const {
 	return m_solid;
+}
+const bool Tile::isPit() const {
+	return m_pit;
 }

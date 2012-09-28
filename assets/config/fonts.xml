@@ -18,6 +18,12 @@ For each entry in Fonts:
 Only TrueType fonts are supported.
 -->
 <Fonts>
+  <tiny>
+    <filepath>fonts/FORGOTTE.TTF</filepath>
+    <height>24</height>
+    <bold>0</bold>
+    <italics>0</italics>
+  </tiny>
   <system_36_x600>
     <filepath>fonts/FORGOTTE.TTF</filepath>
     <height>36</height>

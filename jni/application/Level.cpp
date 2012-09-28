@@ -5,7 +5,7 @@
 #include "Tile.h"
 #include "Body.h"
 
-enum { GRASS = 0x00FF00FF, BLACK = 0x000000FF, DIRT = 0x7F3300FF};
+enum { GRASS = 0x00FF00FF, BLACK = 0x000000FF, DIRT = 0x7F3300FF, FLOOR_BLUE_OUTLINE = 0x0000FFFF, WALL_RED_OUTLINE = 0xFF0000FF};
 
 Zeni::String getImageNameFromColor(const Uint32 color) {
 	switch (color) {
@@ -15,8 +15,29 @@ Zeni::String getImageNameFromColor(const Uint32 color) {
 		return "black";
 	case DIRT:
 		return "dirt";
+	case FLOOR_BLUE_OUTLINE:
+		return "floor-blue_outline";
+	case WALL_RED_OUTLINE:
+		return "wall-red_outline";
 	default:
 		return "placeholder";
+	}
+}
+
+float getRewardFromColor(const Uint32 color) {
+	switch (color) {
+	case GRASS: 
+		return 0;
+	case BLACK:
+		return -10;
+	case DIRT:
+		return 0;
+	case FLOOR_BLUE_OUTLINE:
+		return 0;
+	case WALL_RED_OUTLINE:
+		return -10;
+	default:
+		return -10;
 	}
 }
 
@@ -27,13 +48,23 @@ Level::Level(Zeni::String fileName) {
 		m_numTextures = i;
 	}
 
+	std::vector<std::vector<float>> rewards;
+
 	Zeni::Image levelImage = Zeni::Image(fileName + "-tiles.png");
 	for (int y=0; y < levelImage.height(); y++) {
+		std::vector<float> rewardsRow;
 		for (int x=0; x < levelImage.width(); x++) {
-			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), m_tileSize, getImageNameFromColor(levelImage.extract_RGBA(Zeni::Point2i(x, y))));
+			Uint32 color = levelImage.extract_RGBA(Zeni::Point2i(x, y));
+			Tile newTile(Zeni::Vector2f(x * m_tileSize.i, y * m_tileSize.j), m_tileSize, getImageNameFromColor(color));
 			setTile(newTile);
+
+			rewardsRow.push_back(getRewardFromColor(color));
 		}
+		rewards.push_back(rewardsRow);
 	}
+
+	m_navMap = NavigationMap(rewards, m_tileSize);
+	for (int i=0; i<20; i++) m_navMap.iterateValues();
 }
 
 Level::~Level(){
@@ -107,6 +138,18 @@ void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const{
 			vr.render(tile);
 		}
 		vr.unapply_Texture();
+	}
+	for (int tileX = offset.x/m_tileSize.i; tileX < tileScreenEdge.i; tileX++) {
+		for (int tileY = offset.y/m_tileSize.j; tileY < tileScreenEdge.j; tileY++) {
+			if (tileX >= m_tiles.size() || tileY >= m_tiles[tileX].size()) {
+				continue;
+			}
+			Tile * tile = m_tiles[tileX][tileY];
+			tileVectors[tile->getImageId() - 1].push_back(tile);
+			std::ostringstream str;
+			str << m_navMap.getSuggestedDirectionAtPosition(Zeni::Point2f(tileX * m_tileSize.i, tileY * m_tileSize.j));
+			Zeni::get_Fonts()["tiny"].render_text(Zeni::String(str.str()), Zeni::Point2f(tileX * m_tileSize.i, tileY * m_tileSize.j), Zeni::Color(0xFF0000FF));
+		}
 	}
 }
 

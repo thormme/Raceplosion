@@ -11,6 +11,7 @@ private:
 	long m_imageId;
 
 	bool m_solid;
+	bool m_pit;
 
 public:
 	Tile(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
@@ -22,5 +23,6 @@ public:
 	const long getImageId() const;
 
 	const bool Tile::isSolid() const;
+	const bool Tile::isPit() const;
 };
 #endif

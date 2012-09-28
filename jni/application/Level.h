@@ -4,6 +4,7 @@
 #include <vector>
 #include "Tile.h"
 #include "Body.h"
+#include "NavigationMap.h"
 
 class Level {
 
@@ -12,6 +13,7 @@ private:
 	long m_numTextures;
 	Zeni::Vector2f m_size;
 	Zeni::Vector2f m_tileSize;
+	NavigationMap m_navMap;
 
 	void setTile(Tile tile);
 

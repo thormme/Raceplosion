@@ -90,4 +90,12 @@ The following things are unsupported:
     <filepath>textures/waypoint.png</filepath>
     <tile>0</tile>
   </waypoint>
+  <floor-blue_outline>
+    <filepath>textures/floor-blue_outline.png</filepath>
+    <tile>0</tile>
+  </floor-blue_outline>
+  <wall-red_outline>
+    <filepath>textures/wall-red_outline.png</filepath>
+    <tile>0</tile>
+  </wall-red_outline>
 </Textures>
