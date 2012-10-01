@@ -13,11 +13,13 @@ private:
 	long m_numTextures;
 	Zeni::Vector2f m_size;
 	Zeni::Vector2f m_tileSize;
-	NavigationMap m_navMap;
+	std::vector<NavigationMap> m_navMaps;
 
-	void setTile(Tile tile);
+	void setTile(const Tile &tile);
 
 public:
+	static int waypoint;
+
 	Level(const Zeni::String fileName = "levels/level1");
 
 	virtual ~Level();
@@ -29,5 +31,11 @@ public:
 	const Tile getTile(Zeni::Point2f position);
 
 	void changeTile(Tile tile);
+
+	void updateNavigationMaps(const std::vector<Zeni::Point2f> &goals);
+
+	const std::vector<NavigationMap> &getNavigationMaps() const;
+
+	void improveNavigationMaps(const int mapIndex = -1);
 };
 #endif

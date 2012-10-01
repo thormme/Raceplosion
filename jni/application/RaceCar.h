@@ -9,17 +9,26 @@ class RaceCar : public Actor {
 private:
 	double m_wheelRotation;
 	double m_wheelSeparation;
-	double m_friction;
+	double m_traction;
+	double m_tireFriction;
+	double m_rollingFriction;
+	double m_engineForce;
+	double m_braking;
 	Zeni::Point2f m_startPosition;
 	Zeni::Point2f m_lastGroundPosition;
 	std::vector<Waypoint*> m_passedWaypoints;
 	int m_completedLaps;
 
-	const Zeni::Vector2f getHorizontalFrictionForce();
+	const Zeni::Vector2f RaceCar::getDirectionalFrictionForce(const double &direction, const double &friction);
 	const Zeni::Vector2f getDirectionalVelocity(const double &direction);
 
 protected:
 	virtual const StateModifications run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);
+	void setBraking(bool brake);
+	void accelerate(double fraction); ///< Accelerate car, positive for forward
+	void setWheelRotation(double rotation); ///< Set relative facing direction of wheels
+
+	const bool isMovingInDirection(const double &direction);
 
 public:
 	RaceCar(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),

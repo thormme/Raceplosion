@@ -218,6 +218,7 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\jni\application\Actor.h" />
+    <ClInclude Include="..\..\jni\application\AIRaceCar.h" />
     <ClInclude Include="..\..\jni\application\Body.h" />
     <ClInclude Include="..\..\jni\application\GameObject.h" />
     <ClInclude Include="..\..\jni\application\Input.h" />
@@ -345,6 +346,7 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\jni\application\Actor.cpp" />
+    <ClCompile Include="..\..\jni\application\AIRaceCar.cpp" />
     <ClCompile Include="..\..\jni\application\Body.cpp" />
     <ClCompile Include="..\..\jni\application\bootstrap.cpp">
     </ClCompile>

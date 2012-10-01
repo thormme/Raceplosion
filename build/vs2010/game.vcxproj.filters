@@ -435,6 +435,9 @@
     <ClInclude Include="..\..\jni\application\NavigationMap.h">
       <Filter>jni\application</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\jni\application\AIRaceCar.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\jni\application\bootstrap.cpp">
@@ -477,6 +480,9 @@
       <Filter>jni\application</Filter>
     </ClCompile>
     <ClCompile Include="..\..\jni\application\NavigationMap.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\AIRaceCar.cpp">
       <Filter>jni\application</Filter>
     </ClCompile>
   </ItemGroup>

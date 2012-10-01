@@ -3,6 +3,7 @@
 #include "PlayState.h"
 #include "Level.h"
 #include "RaceCar.h"
+#include "AIRaceCar.h"
 #include "Waypoint.h"
 #include "Actor.h"
 #include "Input.h"
@@ -71,9 +72,16 @@ void PlayState::loadLevel(Zeni::String fileName) {
 		if (objectType == "RaceCar") {
 			float x, y, rotation;
 			lineStream >> x >> y >> rotation;
-			RaceCar* car = new RaceCar(Zeni::Point2f(x*32.0, y*32.0));
+			RaceCar* car = new RaceCar(Zeni::Point2f(x*32.0, y*32.0), rotation/180.0f*Utils::PI);
 			addBody(car);
+			m_humanRacers.push_back(car);
 			m_trackedBodies.push_back(car);
+		} else if (objectType == "AIRaceCar") {
+			float x, y, rotation;
+			lineStream >> x >> y >> rotation;
+			AIRaceCar* car = new AIRaceCar(Zeni::Point2f(x*32.0, y*32.0), rotation/180.0f*Utils::PI);
+			addBody(car);
+			m_aiRacers.push_back(car);
 		} else if (objectType == "Waypoint") {
 			float x, y, rotation, width;
 			lineStream >> x >> y >> rotation >> width;
@@ -82,6 +90,15 @@ void PlayState::loadLevel(Zeni::String fileName) {
 			addBody(waypoint);
 			m_waypoints.push_back(waypoint);
 		}
+	}
+	std::vector<Zeni::Point2f> goals;
+	for (int i=0; i < m_waypoints.size(); i++) {
+		goals.push_back(m_waypoints[i]->getCenter());
+	}
+	m_level->updateNavigationMaps(goals);
+
+	for (int i=0; i < m_aiRacers.size(); i++) {
+		m_aiRacers[i]->setNavigationMaps(m_level->getNavigationMaps());
 	}
 }
 
@@ -137,8 +154,11 @@ void PlayState::perform_logic() {
 		Zeni::Vector2f directionalOffset = Zeni::Vector2f(600.0f/3.0, 500.0f/3.0).multiply_by(m_trackedBodies[i]->getRotationVector());
 		m_viewports[i].stepViewportPosition(timeStep, m_trackedBodies[i]->getPosition() - Zeni::Vector2f(600.0f, 500.0f) + directionalOffset);
 	}
-	for (int i = 0; i < m_trackedBodies.size(); i++) {
-		RaceCar * car = dynamic_cast<RaceCar*>(m_trackedBodies[i]);
+	std::vector<RaceCar*> racers;
+	racers.insert(racers.end(), m_humanRacers.begin(), m_humanRacers.end());
+	racers.insert(racers.end(), m_aiRacers.begin(), m_aiRacers.end());
+	for (int i = 0; i < racers.size(); i++) {
+		RaceCar * car = dynamic_cast<RaceCar*>(racers[i]);
 		if (car != nullptr) {
 			/*Utils::printDebugMessage(car->getPassedWaypoints().size());
 			Utils::printDebugMessage(" waypoints\n");*/
@@ -153,6 +173,9 @@ void PlayState::perform_logic() {
 	applyStateModifications(stateModifications);
 
 	Input::stepInput();
+	static int counter = 0;
+	counter++;
+	//if(counter%30 == 0) m_level->improveNavigationMaps(counter%m_level->getNavigationMaps().size());
 }
 
 void PlayState::on_push() {

@@ -1,6 +1,7 @@
 #ifndef NAVIGATIONMAP_H
 #define NAVIGATIONMAP_H
 #include <zenilib.h>
+#include "Tile.h"
 
 class NavigationMap {
 	
@@ -12,10 +13,11 @@ private:
 
 public:
 	NavigationMap();
-	NavigationMap(const std::vector<std::vector<float>> &rewards, const Zeni::Vector2f &stateSize);
+	NavigationMap(const std::vector<std::vector<Tile*>> &tiles, const Zeni::Vector2f &stateSize, const std::vector<Zeni::Point2f> &goals);
 
 	void iterateValues();
 
 	float getSuggestedDirectionAtPosition(Zeni::Point2f position) const;
+	float getValueAtPosition(Zeni::Point2f position) const;
 };
 #endif

@@ -20,7 +20,7 @@ Only TrueType fonts are supported.
 <Fonts>
   <tiny>
     <filepath>fonts/FORGOTTE.TTF</filepath>
-    <height>24</height>
+    <height>16</height>
     <bold>0</bold>
     <italics>0</italics>
   </tiny>

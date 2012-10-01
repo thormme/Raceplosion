@@ -1,6 +1,15 @@
 #include <zenilib.h>
 #include "Tile.h"
 
+Tile::Tile(const Tile& tile) : GameObject(tile) {
+	m_image = Zeni::String(tile.m_image);
+	m_type = Zeni::String(tile.m_type); // Name of the image to draw
+	m_imageId = tile.m_imageId;
+
+	m_solid = tile.m_solid;
+	m_pit = tile.m_pit;
+}
+
 Tile::Tile(const Zeni::Point2f &position,
 		const Zeni::Vector2f &size,
 		const Zeni::String &image): GameObject(position, size), m_image(image) {

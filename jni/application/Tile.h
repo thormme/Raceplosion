@@ -14,6 +14,7 @@ private:
 	bool m_pit;
 
 public:
+	Tile(const Tile& tile);
 	Tile(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
 		const Zeni::Vector2f &size = Zeni::Vector2f(32.0f, 32.0f),
 		const Zeni::String &image = "placeholder");

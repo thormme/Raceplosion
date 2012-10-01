@@ -3,6 +3,7 @@
 #include <zenilib.h>
 #include "Level.h"
 #include "Actor.h"
+#include "AIRaceCar.h"
 #include "Viewport.h"
 #include "Waypoint.h"
 
@@ -20,6 +21,8 @@ private:
 	std::vector<Body*> m_bodies;
 	std::vector<Waypoint*> m_waypoints;
 	std::vector<Body*> m_trackedBodies;
+	std::vector<AIRaceCar*> m_aiRacers;
+	std::vector<RaceCar*> m_humanRacers;
 	std::vector<Viewport> m_viewports;
 	Zeni::Chronometer<Zeni::Time> m_chronometer;
 	float m_timePassed;
