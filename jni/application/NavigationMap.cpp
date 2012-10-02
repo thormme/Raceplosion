@@ -38,7 +38,7 @@ NavigationMap::NavigationMap(const std::vector<std::vector<Tile*>> &tiles, const
 
 void NavigationMap::iterateValues() {
 	std::vector<std::vector<float>> startingValues(m_values.begin(), m_values.end());
-	double discount = .99;
+	double discount = .999;
 	for (int i=1; i < m_values.size() - 1; i++) {
 		for (int j=1; j < m_values[i].size() - 1; j++) {
 			float max = std::max(startingValues[i][j-1] * discount + m_rewards[i][j-1], 
@@ -58,12 +58,12 @@ void NavigationMap::iterateValues() {
 	}
 }
 
-float NavigationMap::getSuggestedDirectionAtPosition(Zeni::Point2f position) const {
+float NavigationMap::getSuggestedDirectionAtPosition(Zeni::Point2f position, const int smoothing) const {
 	Zeni::Vector2f pos = Zeni::Vector2f(position).divide_by(m_stateSize);
-	float maxValue = -10000.0;
+	float maxValue = -1000000.0;
 	float direction = 0;
-	for (int x = -2; x <= 2; x++) {
-		for (int y = -2; y <= 2; y++) {
+	for (int x = -smoothing; x <= smoothing; x++) {
+		for (int y = -smoothing; y <= smoothing; y++) {
 			if (x != 0 || y != 0) {
 				if (x + (int)pos.i >= 0) {
 					if (x + (int)pos.i < m_values.size()) {

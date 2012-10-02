@@ -158,8 +158,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>
-      </DebugInformationFormat>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_WINDOWS;WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;DISABLE_CPP11;GLEW_NO_GLU;DISABLE_CG;ZLIB_DLL;OGG_DLL=__declspec(dllimport);VORBIS_DLL=__declspec(dllimport);VORBISFILE_DLL=__declspec(dllimport);LIB3DSAPI=__declspec(dllimport);TINYXML_DLL=__declspec(dllimport);TINYXML_EXT=extern;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;ENABLE_XINPUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -167,7 +166,7 @@
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>local_SDLmain.lib;zeni_rest.lib;zeni_graphics.lib;zeni_net.lib;zeni_core.lib;zeni_audio.lib;zeni.lib;local_SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -218,12 +217,14 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\jni\application\Actor.h" />
-    <ClInclude Include="..\..\jni\application\AIRaceCar.h" />
+    <ClInclude Include="..\..\jni\application\AIPlayer.h" />
     <ClInclude Include="..\..\jni\application\Body.h" />
+    <ClInclude Include="..\..\jni\application\Explosion.h" />
     <ClInclude Include="..\..\jni\application\GameObject.h" />
     <ClInclude Include="..\..\jni\application\Input.h" />
     <ClInclude Include="..\..\jni\application\Level.h" />
     <ClInclude Include="..\..\jni\application\NavigationMap.h" />
+    <ClInclude Include="..\..\jni\application\Player.h" />
     <ClInclude Include="..\..\jni\application\PlayState.h" />
     <ClInclude Include="..\..\jni\application\RaceCar.h" />
     <ClInclude Include="..\..\jni\application\Rocket.h" />
@@ -346,14 +347,16 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\jni\application\Actor.cpp" />
-    <ClCompile Include="..\..\jni\application\AIRaceCar.cpp" />
+    <ClCompile Include="..\..\jni\application\AIPlayer.cpp" />
     <ClCompile Include="..\..\jni\application\Body.cpp" />
     <ClCompile Include="..\..\jni\application\bootstrap.cpp">
     </ClCompile>
+    <ClCompile Include="..\..\jni\application\Explosion.cpp" />
     <ClCompile Include="..\..\jni\application\GameObject.cpp" />
     <ClCompile Include="..\..\jni\application\Input.cpp" />
     <ClCompile Include="..\..\jni\application\Level.cpp" />
     <ClCompile Include="..\..\jni\application\NavigationMap.cpp" />
+    <ClCompile Include="..\..\jni\application\Player.cpp" />
     <ClCompile Include="..\..\jni\application\PlayState.cpp" />
     <ClCompile Include="..\..\jni\application\RaceCar.cpp" />
     <ClCompile Include="..\..\jni\application\Rocket.cpp" />

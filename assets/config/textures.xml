@@ -98,4 +98,12 @@ The following things are unsupported:
     <filepath>textures/wall-red_outline.png</filepath>
     <tile>0</tile>
   </wall-red_outline>
+  <bridge-red_diagonal>
+    <filepath>textures/bridge-red_diagonal.png</filepath>
+    <tile>0</tile>
+  </bridge-red_diagonal>
+  <explosion>
+    <filepath>textures/explosion.png</filepath>
+    <tile>0</tile>
+  </explosion>
 </Textures>

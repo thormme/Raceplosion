@@ -20,12 +20,12 @@ Only TrueType fonts are supported.
 <Fonts>
   <tiny>
     <filepath>fonts/FORGOTTE.TTF</filepath>
-    <height>16</height>
+    <height>20</height>
     <bold>0</bold>
     <italics>0</italics>
   </tiny>
   <system_36_x600>
-    <filepath>fonts/FORGOTTE.TTF</filepath>
+    <filepath>fonts/Lobster_1.3.ttf</filepath>
     <height>36</height>
     <bold>0</bold>
     <italics>0</italics>
@@ -34,7 +34,7 @@ Only TrueType fonts are supported.
     </virtual_screen>
   </system_36_x600>
   <system_36_500x600>
-    <filepath>fonts/FORGOTTE.TTF</filepath>
+    <filepath>fonts/Lobster_1.3.ttf</filepath>
     <height>36</height>
     <bold>0</bold>
     <italics>0</italics>
@@ -44,7 +44,7 @@ Only TrueType fonts are supported.
     </virtual_screen>
   </system_36_500x600>
   <system_36_800x600>
-    <filepath>fonts/FORGOTTE.TTF</filepath>
+    <filepath>fonts/Lobster_1.3.ttf</filepath>
     <height>36</height>
     <bold>0</bold>
     <italics>0</italics>
@@ -54,7 +54,7 @@ Only TrueType fonts are supported.
     </virtual_screen>
   </system_36_800x600>
   <title>
-    <filepath>fonts/FORGOTTE.TTF</filepath>
+    <filepath>fonts/Lobster_1.3.ttf</filepath>
     <height>92</height>
     <bold>0</bold>
     <italics>0</italics>

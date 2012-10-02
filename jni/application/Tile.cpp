@@ -8,6 +8,7 @@ Tile::Tile(const Tile& tile) : GameObject(tile) {
 
 	m_solid = tile.m_solid;
 	m_pit = tile.m_pit;
+	m_floating = tile.m_floating;
 }
 
 Tile::Tile(const Zeni::Point2f &position,
@@ -20,15 +21,21 @@ Tile::Tile(const Zeni::Point2f &position,
 	} else {
 		m_type = image;
 	}
+	m_solid = false;
+	m_pit = false;
+	m_floating = false;
 	if (m_type == "placeholder" || m_type == "wall") {
 		m_solid = true;
-	} else {
-		m_solid = false;
 	}
 	if (m_type == "black") {
 		m_pit = true;
-	} else {
-		m_pit = false;
+	}
+	if (m_type == "bridge") {
+		m_floating = true;
+	}
+	if (m_type == "bridge_wall") {
+		m_solid = true;
+		m_floating = true;
 	}
 }
 
@@ -46,4 +53,7 @@ const bool Tile::isSolid() const {
 }
 const bool Tile::isPit() const {
 	return m_pit;
+}
+const bool Tile::isFloating() const {
+	return m_floating;
 }

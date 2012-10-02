@@ -17,7 +17,7 @@ public:
 
 	void iterateValues();
 
-	float getSuggestedDirectionAtPosition(Zeni::Point2f position) const;
+	float getSuggestedDirectionAtPosition(Zeni::Point2f position, const int smoothing = 2) const;
 	float getValueAtPosition(Zeni::Point2f position) const;
 };
 #endif

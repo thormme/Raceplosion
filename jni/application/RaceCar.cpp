@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "PlayState.h"
 #include "Rocket.h"
+#include "Player.h"
 
 const Zeni::Vector2f RaceCar::getDirectionalVelocity(const double &direction) {
 	Zeni::Vector2f directionVector(cos(direction), sin(direction));
@@ -35,45 +36,17 @@ void RaceCar::setWheelRotation(double rotation) {
 	m_wheelRotation = rotation;
 }
 
+Rocket* RaceCar::fireRocket() {
+	Rocket * rocket = new Rocket(getCenter(), getRotation(), getDirectionalVelocity(getRotation()));
+	rocket->setPosition(rocket->getPosition() - rocket->getSize()/2.0f);
+	return rocket;
+}
+
 // Causes the actor to take an action.
 const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
 	StateModifications stateModifications = StateModifications();
-	setForce(Zeni::Vector2f(0.0f, 0.0f));
-	setWheelRotation(0);
-	setBraking(false);
-	if (Input::isKeyDown(SDLK_UP)) {
-		accelerate(1.0);
-		if (isMovingInDirection(getRotation() + Utils::PI)) {
-			setBraking(true);
-		}
-	}
-
-	if (Input::isKeyDown(SDLK_DOWN)) {
-		accelerate(-1.0);
-		if (isMovingInDirection(getRotation())) {
-			setBraking(true);
-		}
-	}
-
-	if (Input::isKeyDown(SDLK_LEFT)) {
-		setWheelRotation(Utils::PI/6);
-	}
-
-	if (Input::isKeyDown(SDLK_RIGHT)) {
-		setWheelRotation(-Utils::PI/6);
-	}
-
-	if (Input::isKeyPressed(SDLK_w)) {
-		Rocket * rocket = new Rocket(getCenter(), getRotation(), getVelocity());
-		rocket->setPosition(rocket->getPosition() - rocket->getSize()/2.0f);
-		stateModifications.bodyAdditions.push_back(rocket);
-	}
-
-	if (Input::isKeyDown(SDLK_q)) {
-		for (std::vector<Tile*>::const_iterator it = tileCollisions.begin(); it != tileCollisions.end(); it++) {
-			Tile newTile = Tile((*it)->getPosition(), (*it)->getSize(), Zeni::String("grass"));
-			stateModifications.tileChanges.push_back(newTile);
-		}
+	if (m_driver != nullptr) {
+		stateModifications.combine(m_driver->driveRaceCar(*this, tileCollisions, bodyCollisions));
 	}
 	return stateModifications;
 }
@@ -179,4 +152,5 @@ RaceCar::RaceCar(const Zeni::Point2f &position,
 	detectCollisionsWithTiles();
 	m_startPosition = getPosition();
 	m_completedLaps = 0;
+	m_driver = nullptr;
 }

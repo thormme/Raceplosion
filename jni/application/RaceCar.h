@@ -3,10 +3,16 @@
 #include <zenilib.h>
 #include "Actor.h"
 #include "Waypoint.h"
+#include "Rocket.h"
+
+class Player;
+class AIPlayer;
 
 class RaceCar : public Actor {
-	
+	friend class Player;
+	friend class AIPlayer;
 private:
+	Player *m_driver;
 	double m_wheelRotation;
 	double m_wheelSeparation;
 	double m_traction;
@@ -27,6 +33,7 @@ protected:
 	void setBraking(bool brake);
 	void accelerate(double fraction); ///< Accelerate car, positive for forward
 	void setWheelRotation(double rotation); ///< Set relative facing direction of wheels
+	Rocket* fireRocket();
 
 	const bool isMovingInDirection(const double &direction);
 

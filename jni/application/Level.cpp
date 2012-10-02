@@ -5,8 +5,9 @@
 #include "Tile.h"
 #include "Body.h"
 #include "Utils.h"
+#include "Input.h"
 
-enum { GRASS = 0x00FF00FF, BLACK = 0x000000FF, DIRT = 0x7F3300FF, FLOOR_BLUE_OUTLINE = 0x0000FFFF, WALL_RED_OUTLINE = 0xFF0000FF};
+enum { GRASS = 0x00FF00FF, BLACK = 0x000000FF, DIRT = 0x7F3300FF, FLOOR_BLUE_OUTLINE = 0x0000FFFF, BRIDGE_RED_DIAGONAL = 0xFF0000FF};
 int Level::waypoint = 0;
 Zeni::String getImageNameFromColor(const Uint32 color) {
 	switch (color) {
@@ -18,8 +19,8 @@ Zeni::String getImageNameFromColor(const Uint32 color) {
 		return "dirt";
 	case FLOOR_BLUE_OUTLINE:
 		return "floor-blue_outline";
-	case WALL_RED_OUTLINE:
-		return "wall-red_outline";
+	case BRIDGE_RED_DIAGONAL:
+		return "bridge-red_diagonal";
 	default:
 		return "placeholder";
 	}
@@ -114,7 +115,7 @@ void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const{
 		}
 		vr.unapply_Texture();
 	}
-	for (int tileX = offset.x/m_tileSize.i; tileX < tileScreenEdge.i; tileX++) {
+	/*for (int tileX = offset.x/m_tileSize.i; tileX < tileScreenEdge.i; tileX++) {
 		for (int tileY = offset.y/m_tileSize.j; tileY < tileScreenEdge.j; tileY++) {
 			if (tileX >= m_tiles.size() || tileY >= m_tiles[tileX].size()) {
 				continue;
@@ -122,10 +123,14 @@ void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const{
 			Tile * tile = m_tiles[tileX][tileY];
 			tileVectors[tile->getImageId() - 1].push_back(tile);
 			std::ostringstream str;
-			str << (int)(fmod(m_navMaps[waypoint].getSuggestedDirectionAtPosition(Zeni::Point2f(tileX * m_tileSize.i, tileY * m_tileSize.j)), (float)Utils::PI*2.0f)/Utils::PI*180);
+			if (Input::isKeyDown(SDLK_z)) {
+				str << (int)(m_navMaps[waypoint].getValueAtPosition(Zeni::Point2f(tileX * m_tileSize.i, tileY * m_tileSize.j))*10);
+			} else {
+				str << (int)(fmod(m_navMaps[waypoint].getSuggestedDirectionAtPosition(Zeni::Point2f(tileX * m_tileSize.i, tileY * m_tileSize.j)), (float)Utils::PI*2.0f)/Utils::PI*180);
+			}
 			Zeni::get_Fonts()["tiny"].render_text(Zeni::String(str.str()), Zeni::Point2f(tileX * m_tileSize.i, tileY * m_tileSize.j), Zeni::Color(0xFF0000FF));
 		}
-	}
+	}*/
 }
 
 const std::vector<Tile*> Level::getCollidingTiles(const Body &body) const {
@@ -165,7 +170,7 @@ void Level::updateNavigationMaps(const std::vector<Zeni::Point2f> &goals) {
 		if (k < 0) {
 			k += goals.size();
 		}
-		int distance = (Zeni::Vector2f(goals[k]) - Zeni::Vector2f(goals[i])).magnitude()/12;
+		int distance = (Zeni::Vector2f(goals[k]) - Zeni::Vector2f(goals[i])).magnitude()/6;
 		for (int j=0; j < distance; j++) {
 			m_navMaps[i].iterateValues();
 		}

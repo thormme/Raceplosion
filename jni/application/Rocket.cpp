@@ -1,6 +1,8 @@
 #include <zenilib.h>
 #include "Rocket.h"
-
+#include "Explosion.h"
+#include "Utils.h"
+#include "RaceCar.h"
 
 Rocket::Rocket(const Zeni::Point2f &position,
 		const double rotation,
@@ -22,12 +24,20 @@ const StateModifications Rocket::run(const std::vector<Tile*> &tileCollisions, c
 		}
 	}
 	if (bodyCollisions.size() && m_explosionTimer.seconds() > .6) {
-		explode = true;
+		for (std::vector<Body*>::const_iterator it = bodyCollisions.begin(); it != bodyCollisions.end(); it++) {
+			RaceCar * car = dynamic_cast<RaceCar*>(*it);
+			if (car != nullptr) {
+				explode = true;
+				break;
+			}
+		}
 	}
 	if (explode) {
-		for (std::vector<Tile*>::const_iterator it = tileCollisions.begin(); it != tileCollisions.end(); it++) {
-			Tile newTile = Tile((*it)->getPosition(), (*it)->getSize(), Zeni::String("grass"));
-			stateModifications.tileChanges.push_back(newTile);
+		int numSparks = 9;
+		for (int i=0; i < 9; i++) {
+			double rotation = (double)(i)/(double)(numSparks)*Utils::PI*2.0;
+			Explosion* explosion = new Explosion(getPosition() + Utils::getVectorFromAngle(rotation)*(getSize()/2.0f).magnitude(), rotation, Utils::getVectorFromAngle(rotation)*100);
+			stateModifications.bodyAdditions.push_back(explosion);
 		}
 		stateModifications.bodyRemovals.push_back(this);
 	}

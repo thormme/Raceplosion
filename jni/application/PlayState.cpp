@@ -3,7 +3,8 @@
 #include "PlayState.h"
 #include "Level.h"
 #include "RaceCar.h"
-#include "AIRaceCar.h"
+#include "AIPlayer.h"
+#include "Player.h"
 #include "Waypoint.h"
 #include "Actor.h"
 #include "Input.h"
@@ -72,16 +73,18 @@ void PlayState::loadLevel(Zeni::String fileName) {
 		if (objectType == "RaceCar") {
 			float x, y, rotation;
 			lineStream >> x >> y >> rotation;
-			RaceCar* car = new RaceCar(Zeni::Point2f(x*32.0, y*32.0), rotation/180.0f*Utils::PI);
+			Player * player = new Player(); // TODO: LEAK!!!
+			RaceCar* car = player->getNewCar(Zeni::Point2f(x*32.0, y*32.0), rotation/180.0f*Utils::PI);
 			addBody(car);
-			m_humanRacers.push_back(car);
+			m_racers.push_back(player);
 			m_trackedBodies.push_back(car);
 		} else if (objectType == "AIRaceCar") {
 			float x, y, rotation;
 			lineStream >> x >> y >> rotation;
-			AIRaceCar* car = new AIRaceCar(Zeni::Point2f(x*32.0, y*32.0), rotation/180.0f*Utils::PI);
+			AIPlayer * player = new AIPlayer(); // TODO: LEAK!!!
+			RaceCar* car = player->getNewCar(Zeni::Point2f(x*32.0, y*32.0), rotation/180.0f*Utils::PI);
 			addBody(car);
-			m_aiRacers.push_back(car);
+			m_racers.push_back(player);
 		} else if (objectType == "Waypoint") {
 			float x, y, rotation, width;
 			lineStream >> x >> y >> rotation >> width;
@@ -97,8 +100,11 @@ void PlayState::loadLevel(Zeni::String fileName) {
 	}
 	m_level->updateNavigationMaps(goals);
 
-	for (int i=0; i < m_aiRacers.size(); i++) {
-		m_aiRacers[i]->setNavigationMaps(m_level->getNavigationMaps());
+	for (int i=0; i < m_racers.size(); i++) {
+		AIPlayer * aiPlayer = dynamic_cast<AIPlayer*>(m_racers[i]);
+		if (aiPlayer != nullptr) {
+			aiPlayer->setNavigationMaps(m_level->getNavigationMaps());
+		}
 	}
 }
 
@@ -130,8 +136,12 @@ const std::vector<std::vector<Body*>> PlayState::getBodyCollisions() {
 }
 
 void PlayState::perform_logic() {
+	if (Input::isKeyDown(SDLK_0)) {
+		Zeni::get_Game().push_state(new Zeni::Popup_Pause_State());
+		Zeni::get_Game().pop_state();
+	}
     const float timePassed = m_chronometer.seconds();
-	const float timeStep = std::min(timePassed - m_timePassed, 50.0f/1000.0f);
+	const float timeStep = std::min(timePassed - m_timePassed, 50.0f/1000.0f); // Set lower bound on simulation at 20 fps
     m_timePassed = timePassed;
 
 	StateModifications stateModifications = StateModifications();
@@ -146,7 +156,7 @@ void PlayState::perform_logic() {
 		m_bodies[i]->handleCollisions(timeStep, tileCollisions, bodyCollisions[i]);
 		Actor * actor = dynamic_cast<Actor*>(m_bodies[i]);
 		if (actor != nullptr) {
-			stateModifications.combine(actor->act(tileCollisions, bodyCollisions[i])); // TODO: pass body collisions or possible simply store these beforehand so that body can acces these too...
+			stateModifications.combine(actor->act(tileCollisions, bodyCollisions[i])); // TODO: possibly simply store body collisions for these beforehand so that body can access these too...
 		}
 	}
 
@@ -154,19 +164,14 @@ void PlayState::perform_logic() {
 		Zeni::Vector2f directionalOffset = Zeni::Vector2f(600.0f/3.0, 500.0f/3.0).multiply_by(m_trackedBodies[i]->getRotationVector());
 		m_viewports[i].stepViewportPosition(timeStep, m_trackedBodies[i]->getPosition() - Zeni::Vector2f(600.0f, 500.0f) + directionalOffset);
 	}
-	std::vector<RaceCar*> racers;
-	racers.insert(racers.end(), m_humanRacers.begin(), m_humanRacers.end());
-	racers.insert(racers.end(), m_aiRacers.begin(), m_aiRacers.end());
-	for (int i = 0; i < racers.size(); i++) {
-		RaceCar * car = dynamic_cast<RaceCar*>(racers[i]);
-		if (car != nullptr) {
-			/*Utils::printDebugMessage(car->getPassedWaypoints().size());
-			Utils::printDebugMessage(" waypoints\n");*/
-			if (car->getPassedWaypoints().size() == m_waypoints.size() && car->isTouching(*m_waypoints[0])) {
-				car->setLapCompleted();
-				/*Utils::printDebugMessage(car->getCompletedLaps());
-				Utils::printDebugMessage(" laps\n");*/
-			}
+
+	for (int i = 0; i < m_racers.size(); i++) {
+		/*Utils::printDebugMessage(car->getPassedWaypoints().size());
+		Utils::printDebugMessage(" waypoints\n");*/
+		if (m_racers[i]->getLastCar()->getPassedWaypoints().size() == m_waypoints.size() && m_racers[i]->getLastCar()->isTouching(*m_waypoints[0])) {
+			m_racers[i]->getLastCar()->setLapCompleted();
+			/*Utils::printDebugMessage(car->getCompletedLaps());
+			Utils::printDebugMessage(" laps\n");*/
 		}
 	}
 	
@@ -181,13 +186,13 @@ void PlayState::perform_logic() {
 void PlayState::on_push() {
     //get_Window().mouse_grab(true);
     get_Window().mouse_hide(true);
-    //get_Game().joy_mouse.enabled = false;
+    get_Game().joy_mouse.enabled = false;
 }
 
 void PlayState::on_pop() {
     //get_Window().mouse_grab(false);
     get_Window().mouse_hide(false);
-    //get_Game().joy_mouse.enabled = true;
+    get_Game().joy_mouse.enabled = true;
 }
 
 void PlayState::on_key(const SDL_KeyboardEvent &event) {
@@ -195,6 +200,18 @@ void PlayState::on_key(const SDL_KeyboardEvent &event) {
 		Input::updateKey(event.keysym.sym, event.type == SDL_KEYDOWN);
 	}
 	Gamestate_Base::on_key(event);
+}
+
+void PlayState::on_joy_button(const SDL_JoyButtonEvent &event) {
+	if (event.type == SDL_JOYBUTTONDOWN || event.type == SDL_JOYBUTTONUP) {
+		Input::updateJoyButton(event.which, event.button, event.type == SDL_JOYBUTTONDOWN);
+	}
+	Gamestate_Base::on_joy_button(event);
+}
+
+void PlayState::on_joy_axis(const SDL_JoyAxisEvent &event) {
+	Input::updateJoyAxisValue(event.which, event.axis, event.value);
+	Gamestate_Base::on_joy_axis(event);
 }
 
 void PlayState::render() {

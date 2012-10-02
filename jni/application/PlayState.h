@@ -21,8 +21,7 @@ private:
 	std::vector<Body*> m_bodies;
 	std::vector<Waypoint*> m_waypoints;
 	std::vector<Body*> m_trackedBodies;
-	std::vector<AIRaceCar*> m_aiRacers;
-	std::vector<RaceCar*> m_humanRacers;
+	std::vector<Player*> m_racers;
 	std::vector<Viewport> m_viewports;
 	Zeni::Chronometer<Zeni::Time> m_chronometer;
 	float m_timePassed;
@@ -44,6 +43,10 @@ private:
 	void on_pop();
 
 	void on_key(const SDL_KeyboardEvent &event);
+
+	void on_joy_button(const SDL_JoyButtonEvent &event);
+
+	void on_joy_axis(const SDL_JoyAxisEvent &event);
 
 	void render();
 

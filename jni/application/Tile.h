@@ -12,6 +12,7 @@ private:
 
 	bool m_solid;
 	bool m_pit;
+	bool m_floating;
 
 public:
 	Tile(const Tile& tile);
@@ -25,5 +26,6 @@ public:
 
 	const bool Tile::isSolid() const;
 	const bool Tile::isPit() const;
+	const bool Tile::isFloating() const;
 };
 #endif

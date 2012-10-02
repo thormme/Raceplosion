@@ -435,7 +435,13 @@
     <ClInclude Include="..\..\jni\application\NavigationMap.h">
       <Filter>jni\application</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\jni\application\AIRaceCar.h">
+    <ClInclude Include="..\..\jni\application\Player.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\jni\application\AIPlayer.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\jni\application\Explosion.h">
       <Filter>jni\application</Filter>
     </ClInclude>
   </ItemGroup>
@@ -482,7 +488,13 @@
     <ClCompile Include="..\..\jni\application\NavigationMap.cpp">
       <Filter>jni\application</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\jni\application\AIRaceCar.cpp">
+    <ClCompile Include="..\..\jni\application\Player.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\AIPlayer.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\Explosion.cpp">
       <Filter>jni\application</Filter>
     </ClCompile>
   </ItemGroup>
