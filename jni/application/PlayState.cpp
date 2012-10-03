@@ -14,13 +14,13 @@
 
 using namespace Zeni;
 
-PlayState::PlayState(std::vector<Player*> players)
+PlayState::PlayState(std::vector<Player*> players, const Zeni::String &level)
 	  : m_timePassed(0.0f),
 		m_racers(players) {
     set_pausable(true);
 	m_chronometer.start();
 	m_level = nullptr;
-	loadLevel("levels/level2");
+	loadLevel("levels/" + level);
 	m_numRequiredLaps = 1;
 }
 

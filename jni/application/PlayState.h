@@ -13,7 +13,7 @@ class PlayState : public Zeni::Gamestate_Base {
 	PlayState operator=(const PlayState &);
 
 public:
-	PlayState(std::vector<Player*> players);
+	PlayState(std::vector<Player*> players, const Zeni::String &level = "level1");
 	
 	virtual ~PlayState();
 

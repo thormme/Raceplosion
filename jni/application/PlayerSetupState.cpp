@@ -4,9 +4,13 @@
 #include "PlayState.h"
 
 std::vector<Player*> players;
+Zeni::String level;
 
-PlayerSetupState::PlayerSetupState() : Widget_Gamestate(std::make_pair(Zeni::Point2f(0.0f, 0.0f), Zeni::Point2f(800.0f, 600.0f))) {
+PlayerSetupState::PlayerSetupState() 
+		: m_mapSelect(Zeni::Point2f(200.0f, 200.0f), Zeni::Point2f(400.0f,250.0f), Zeni::Point2f(200.0f, 200.0f), Zeni::Point2f(400.0f,500), "system_36_800x600"),
+		Widget_Gamestate(std::make_pair(Zeni::Point2f(0.0f, 0.0f), Zeni::Point2f(800.0f, 600.0f))) {
 	m_widgets.lend_Widget(play_button);
+	m_widgets.lend_Widget(m_mapSelect);
 	for (int i=0; i < 4; i++) {
 		players.push_back(new Player());
 		m_controls.push_back(new ControlTypeSelect(i, Zeni::Point2f(200.0f*(float)(i), 0.0f), Zeni::Point2f(200.0f*(float)(i+1),50.0f), Zeni::Point2f(200.0f*(float)(i), 0.0f), Zeni::Point2f(200.0f*(float)(i+1),300), "system_36_800x600"));
@@ -86,6 +90,23 @@ void PlayerSetupState::ControlTypeSelect::on_accept(const Zeni::String &option) 
 	Selector::on_accept(option);
 }
 
+PlayerSetupState::MapSelect::MapSelect(const Zeni::Point2f &upper_left_, const Zeni::Point2f &lower_right_, const Zeni::Point2f &expanded_upper_left_, const Zeni::Point2f &expanded_lower_right_, const Zeni::String &font_)
+		: Selector(upper_left_, lower_right_, expanded_upper_left_, expanded_lower_right_, font_) {
+			
+	add_option("level1");
+	add_option("level2");
+
+	select_option("level1");
+	on_accept(get_selected());
+}
+
+void PlayerSetupState::MapSelect::on_accept(const Zeni::String &option) {
+
+	level = option;
+
+	Selector::on_accept(option);
+}
+
 void PlayerSetupState::Play_Button::on_accept() {
-	Zeni::get_Game().push_state(new PlayState(players));
+	Zeni::get_Game().push_state(new PlayState(players, level));
 }

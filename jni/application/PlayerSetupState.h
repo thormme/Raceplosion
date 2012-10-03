@@ -21,6 +21,17 @@ public:
 		void on_accept(const Zeni::String &option);
 	};	
 
+	class MapSelect : public Zeni::Selector {
+	//public:
+		MapSelect(const MapSelect &);
+		MapSelect & operator=(const MapSelect &);
+
+	public:
+		MapSelect(const Zeni::Point2f &upper_left_, const Zeni::Point2f &lower_right_, const Zeni::Point2f &expanded_upper_left_, const Zeni::Point2f &expanded_lower_right_, const Zeni::String &font_);
+
+		void on_accept(const Zeni::String &option);
+	} m_mapSelect;	
+
 	class Play_Button : public Zeni::Text_Button {
 		Play_Button(const Play_Button &);
 		Play_Button & operator=(const Play_Button &);
