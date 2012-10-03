@@ -10,19 +10,6 @@ class RaceCar;
 
 class Player {
 	
-private:
-	// Player attributes
-	InputAction m_forward;
-	InputAction m_backward;
-	InputAction m_left;
-	InputAction m_right;
-
-	RaceCar* m_raceCar;
-	// Attributes to pass to car
-
-protected:
-
-
 public:
 	Player();
 
@@ -30,6 +17,23 @@ public:
 
 	RaceCar * getLastCar();
 
+	void setControls(const std::vector<InputAction> &controls);
+	void setControls(int joyIndex = -1); ///< Set to default control scheme
+
+	void setCarImage(const Zeni::String &image);
+	const Zeni::String getCarImage() const;
+
 	virtual const StateModifications driveRaceCar(RaceCar &raceCar, const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);
+
+private:
+	enum Controls {FORWARD = 0, BACKWARD, LEFT, RIGHT, FIRE_ROCKET, LAY_MINE, JUMP, RESPAWN, FINAL_ELEMENT};
+	// Player attributes
+	std::vector<InputAction> m_controls;
+
+	RaceCar* m_raceCar;
+	// Attributes to pass to car
+	Zeni::String m_carImage;
+protected:
+
 };
 #endif

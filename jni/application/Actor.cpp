@@ -25,8 +25,10 @@ const StateModifications Actor::act(const std::vector<Tile*> &tileCollisions, co
 	if (m_active) {
 		stateModifications = run(tileCollisions, bodyCollisions);
 	}
-	//m_active = false;
-	m_active = true;
 
 	return stateModifications;
+}
+
+void Actor::setActive(bool active) {
+	m_active = active;
 }

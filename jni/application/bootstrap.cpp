@@ -6,6 +6,7 @@
 
 #include <zenilib.h>
 #include "PlayState.h"
+#include "PlayerSetupState.h"
 
 #if defined(_DEBUG) && defined(_WINDOWS)
 #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
@@ -34,17 +35,9 @@ private:
   void render() {
     Widget_Gamestate::render();
 
-    Zeni::Font &fr = get_Fonts()["title"];
+    Zeni::Font &fr = get_Fonts()["system_36_800x600"];
 
-    fr.render_text(
-#if defined(_WINDOWS)
-                   "ALT+F4"
-#elif defined(_MACOSX)
-                   "Apple+Q"
-#else
-                   "Ctrl+Q"
-#endif
-                           " to Quit",
+    fr.render_text("Instructions go here!",
                    Point2f(400.0f, 300.0f - 0.5f * fr.get_text_height()),
                    get_Colors()["title_text"],
                    ZENI_CENTER);
@@ -63,7 +56,7 @@ class Bootstrap {
       get_Sounds();
       get_Game().joy_mouse.enabled = true;
 
-      return new Title_State<PlayState, Instructions_State>("Raceplosion!");
+      return new Title_State<PlayerSetupState, Instructions_State>("Raceplosion!");
     }
   } m_goi;
 

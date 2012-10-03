@@ -6,13 +6,14 @@
 class Rocket : public Actor {
 	
 private:
-	Zeni::Chronometer<Zeni::Time> m_explosionTimer;
+	const Actor * m_owner;
 
 protected:
 	virtual const StateModifications run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);
 
 public:
-	Rocket(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
+	Rocket(const Actor * owner,
+		const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
 		const double rotation = 0.0f,
 		const Zeni::Vector2f &velocity = Zeni::Vector2f(0.0f, 0.0f));
 

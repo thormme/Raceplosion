@@ -444,6 +444,18 @@
     <ClInclude Include="..\..\jni\application\Explosion.h">
       <Filter>jni\application</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\jni\application\Mine.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\jni\application\RaceCarViewport.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\jni\application\PlayerSetupState.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\jni\application\RaceResultsState.h">
+      <Filter>jni\application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\jni\application\bootstrap.cpp">
@@ -495,6 +507,18 @@
       <Filter>jni\application</Filter>
     </ClCompile>
     <ClCompile Include="..\..\jni\application\Explosion.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\Mine.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\RaceCarViewport.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\PlayerSetupState.cpp">
+      <Filter>jni\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\jni\application\RaceResultsState.cpp">
       <Filter>jni\application</Filter>
     </ClCompile>
   </ItemGroup>

@@ -9,23 +9,27 @@
 #include "Actor.h"
 #include "Input.h"
 #include "Utils.h"
+#include "RaceCarViewport.h"
+#include "RaceResultsState.h"
 
 using namespace Zeni;
 
-PlayState::PlayState()
-	  : m_timePassed(0.0f) {
+PlayState::PlayState(std::vector<Player*> players)
+	  : m_timePassed(0.0f),
+		m_racers(players) {
     set_pausable(true);
 	m_chronometer.start();
-	//addBody(new RaceCar());
-	//addBody(new RaceCar(Zeni::Point2f(100.0, 100.0)));
-	m_viewports.push_back(Viewport(Zeni::Point2f(), Zeni::Vector2f(1.0f, 1.0f)));
 	m_level = nullptr;
-	loadLevel("levels/level1");
+	loadLevel("levels/level2");
+	m_numRequiredLaps = 1;
 }
 
 PlayState::~PlayState() {
 	for (int i=0; i < m_bodies.size(); i++) {
 		delete m_bodies[i];
+	}
+	for (int i=0; i < m_viewports.size(); i++) {
+		delete m_viewports[i];
 	}
 	delete m_level;
 }
@@ -66,6 +70,8 @@ void PlayState::loadLevel(Zeni::String fileName) {
 	}
 	std::istringstream fileDataStream(s);
 	std::string line;
+	int unusedPlayer = 0;
+	std::vector<RaceCar*> humanRaceCars;
 	for (int y=0; std::getline(fileDataStream, line); y++) {
 		std::istringstream lineStream(line);
 		std::string objectType;
@@ -73,18 +79,14 @@ void PlayState::loadLevel(Zeni::String fileName) {
 		if (objectType == "RaceCar") {
 			float x, y, rotation;
 			lineStream >> x >> y >> rotation;
-			Player * player = new Player(); // TODO: LEAK!!!
+			Player * player = m_racers[unusedPlayer++];
 			RaceCar* car = player->getNewCar(Zeni::Point2f(x*32.0, y*32.0), rotation/180.0f*Utils::PI);
 			addBody(car);
-			m_racers.push_back(player);
-			m_trackedBodies.push_back(car);
-		} else if (objectType == "AIRaceCar") {
-			float x, y, rotation;
-			lineStream >> x >> y >> rotation;
-			AIPlayer * player = new AIPlayer(); // TODO: LEAK!!!
-			RaceCar* car = player->getNewCar(Zeni::Point2f(x*32.0, y*32.0), rotation/180.0f*Utils::PI);
-			addBody(car);
-			m_racers.push_back(player);
+			AIPlayer * aiPlayer = dynamic_cast<AIPlayer*>(player);
+			if (aiPlayer == nullptr) {
+				humanRaceCars.push_back(car);
+				m_trackedBodies.push_back(car);
+			}
 		} else if (objectType == "Waypoint") {
 			float x, y, rotation, width;
 			lineStream >> x >> y >> rotation >> width;
@@ -92,6 +94,16 @@ void PlayState::loadLevel(Zeni::String fileName) {
 			waypoint->setPosition(waypoint->getPosition());
 			addBody(waypoint);
 			m_waypoints.push_back(waypoint);
+		}
+	}
+	Zeni::Vector2f screenSize = Zeni::Vector2f(Zeni::Point2f(Zeni::get_Video().get_render_target_size()));
+	for (int i=0; i < humanRaceCars.size(); i++) {
+		if (humanRaceCars.size() == 1) {
+			m_viewports.push_back(new RaceCarViewport(humanRaceCars[i], Zeni::Point2f(), Zeni::Vector2f(1.0f, 1.0f), Zeni::Point2f(), Zeni::Point2f(screenSize.i/screenSize.j*1000.0f, 1000.0f)));
+		} else if (humanRaceCars.size() == 2) {
+			m_viewports.push_back(new RaceCarViewport(humanRaceCars[i], Zeni::Point2f((double)(i)/2.0f, 0), Zeni::Vector2f(0.5f, 1.0f), Zeni::Point2f(screenSize.i/2.0f, 0.0f), Zeni::Point2f(screenSize.i/screenSize.j*1000.0f/2.0f, 1000.0f)));
+		} else if (humanRaceCars.size() > 2) {
+			m_viewports.push_back(new RaceCarViewport(humanRaceCars[i], Zeni::Point2f((double)(i%2)/2.0f, (double)(i/2)/2.0f), Zeni::Vector2f(0.5f, 0.5f), Zeni::Point2f(screenSize.i, 0.0f), Zeni::Point2f(screenSize.i/screenSize.j*1000.0f, 1000.0f)));
 		}
 	}
 	std::vector<Zeni::Point2f> goals;
@@ -136,19 +148,18 @@ const std::vector<std::vector<Body*>> PlayState::getBodyCollisions() {
 }
 
 void PlayState::perform_logic() {
-	if (Input::isKeyDown(SDLK_0)) {
-		Zeni::get_Game().push_state(new Zeni::Popup_Pause_State());
-		Zeni::get_Game().pop_state();
-	}
     const float timePassed = m_chronometer.seconds();
 	const float timeStep = std::min(timePassed - m_timePassed, 50.0f/1000.0f); // Set lower bound on simulation at 20 fps
     m_timePassed = timePassed;
 
 	StateModifications stateModifications = StateModifications();
 
+	// Run physics
 	for (int i=0; i < m_bodies.size(); i++) {
 		m_bodies[i]->stepPhysics(timeStep);
 	}
+
+	// Handle collisions and have actors act
 	std::vector<std::vector<Body*>> bodyCollisions = getBodyCollisions();
     for (int i=0; i < m_bodies.size(); i++) {
 		std::vector<Tile*> tileCollisions;
@@ -160,26 +171,42 @@ void PlayState::perform_logic() {
 		}
 	}
 
+	// Adjust viewports
 	for (int i = 0; i < m_viewports.size(); i++) {
-		Zeni::Vector2f directionalOffset = Zeni::Vector2f(600.0f/3.0, 500.0f/3.0).multiply_by(m_trackedBodies[i]->getRotationVector());
-		m_viewports[i].stepViewportPosition(timeStep, m_trackedBodies[i]->getPosition() - Zeni::Vector2f(600.0f, 500.0f) + directionalOffset);
+		Zeni::Vector2f halfScreen = m_viewports[i]->getWorldViewSize()/2.0f;
+		Zeni::Vector2f directionalOffset = (halfScreen/3.0f).multiply_by(m_trackedBodies[i]->getRotationVector());
+		m_viewports[i]->stepViewportPosition(timeStep, m_trackedBodies[i]->getPosition() - halfScreen + directionalOffset);
 	}
 
+	// Track race progress
 	for (int i = 0; i < m_racers.size(); i++) {
-		/*Utils::printDebugMessage(car->getPassedWaypoints().size());
-		Utils::printDebugMessage(" waypoints\n");*/
 		if (m_racers[i]->getLastCar()->getPassedWaypoints().size() == m_waypoints.size() && m_racers[i]->getLastCar()->isTouching(*m_waypoints[0])) {
 			m_racers[i]->getLastCar()->setLapCompleted();
-			/*Utils::printDebugMessage(car->getCompletedLaps());
-			Utils::printDebugMessage(" laps\n");*/
+			if (m_racers[i]->getLastCar()->getCompletedLaps() == m_numRequiredLaps) {
+				m_racers[i]->getLastCar()->setVelocity(Zeni::Vector2f());
+				m_racers[i]->getLastCar()->setForce(Zeni::Vector2f());
+				m_racers[i]->getLastCar()->setActive(false);
+				m_finishedRacers.push_back(i);
+			}
 		}
 	}
+	if (m_finishedRacers.size() >= m_racers.size() - 1) {
+		for (int i = 0; i < m_racers.size(); i++) {
+			if (m_racers[i]->getLastCar()->getCompletedLaps() < m_numRequiredLaps) {
+				m_finishedRacers.push_back(i);
+			}
+		}
+		Zeni::get_Game().pop_state();
+		Zeni::get_Game().push_state(new RaceResultsState(m_racers, m_finishedRacers));
+	}
 	
+	// Apply any bady/tile changes made by actors
 	applyStateModifications(stateModifications);
 
 	Input::stepInput();
 	static int counter = 0;
 	counter++;
+	// TODO: investigate dealing with path changes
 	//if(counter%30 == 0) m_level->improveNavigationMaps(counter%m_level->getNavigationMaps().size());
 }
 
@@ -215,11 +242,11 @@ void PlayState::on_joy_axis(const SDL_JoyAxisEvent &event) {
 }
 
 void PlayState::render() {
-	for (std::vector<Viewport>::iterator it = m_viewports.begin(); it != m_viewports.end(); it++) {
+	for (std::vector<Viewport*>::iterator it = m_viewports.begin(); it != m_viewports.end(); it++) {
 		/*Zeni::Vector2f directionalOffset = Zeni::Vector2f(600.0f/3.0, viewHeight/3.0).multiply_by(m_bodies[playerNum]->getRotationVector());
 		Zeni::Point2f upperLeft = m_bodies[playerNum]->getPosition() - Zeni::Vector2f(600.0f, viewHeight) + directionalOffset;
 		Zeni::Point2f lowerRight = m_bodies[playerNum]->getPosition() + Zeni::Vector2f(600.0f, viewHeight) + directionalOffset;*/
 			
-		it->render(*m_level, m_bodies);
+		(*it)->render(*m_level, m_bodies);
 	}
 }

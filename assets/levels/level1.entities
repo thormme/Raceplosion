@@ -1,8 +1,9 @@
-Waypoint 30 11 90 10
-Waypoint 129 17 90 10
+Waypoint 30 11 -90 10
+Waypoint 129 17 -90 10
 Waypoint 171 33 0 10
 Waypoint 64 70 90 10
-Waypoint 13 42 0 10
+Waypoint 13 42 180 10
 RaceCar 24 14 0
-AIRaceCar 15 25 -90
-AIRaceCar 17 28 -90
+RaceCar 26 16 0
+RaceCar 15 25 -90
+RaceCar 17 28 -90

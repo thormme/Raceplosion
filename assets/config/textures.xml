@@ -70,6 +70,22 @@ The following things are unsupported:
     <filepath>textures/race_car.png</filepath>
     <tile>0</tile>
   </race_car>
+  <race_car-blue>
+    <filepath>textures/race_car-blue.png</filepath>
+    <tile>0</tile>
+  </race_car-blue>
+  <race_car-yellow>
+    <filepath>textures/race_car-yellow.png</filepath>
+    <tile>0</tile>
+  </race_car-yellow>
+  <race_car-silver>
+    <filepath>textures/race_car-silver.png</filepath>
+    <tile>0</tile>
+  </race_car-silver>
+  <race_car-destroyed>
+    <filepath>textures/race_car-destroyed.png</filepath>
+    <tile>0</tile>
+  </race_car-destroyed>
   <dirt>
     <filepath>textures/dirt.png</filepath>
     <tile>1</tile>
@@ -86,6 +102,10 @@ The following things are unsupported:
     <filepath>textures/weapon_rocket.png</filepath>
     <tile>0</tile>
   </weapon_rocket>
+  <weapon_mine>
+    <filepath>textures/weapon_mine.png</filepath>
+    <tile>0</tile>
+  </weapon_mine>
   <waypoint>
     <filepath>textures/waypoint.png</filepath>
     <tile>0</tile>
@@ -106,4 +126,12 @@ The following things are unsupported:
     <filepath>textures/explosion.png</filepath>
     <tile>0</tile>
   </explosion>
+  <health>
+    <filepath>textures/health.png</filepath>
+    <tile>0</tile>
+  </health>
+  <jump>
+    <filepath>textures/jump.png</filepath>
+    <tile>0</tile>
+  </jump>
 </Textures>

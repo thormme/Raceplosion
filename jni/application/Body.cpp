@@ -41,6 +41,14 @@ void Body::handleCollisions(const double timeStep, std::vector<Tile*> tiles, std
 	// TODO: implement
 }
 
+void Body::setImage(const Zeni::String &image) {
+	m_image = image;
+}
+
+const Zeni::String Body::getImage() const {
+	return m_image;
+}
+
 void Body::setVelocity(const Zeni::Vector2f velocity) {
 	m_velocity = velocity;
 }
@@ -57,12 +65,12 @@ void Body::setRotationRate(const double rotationRate) {
 	m_rotationRate = rotationRate;
 }
 
-void Body::detectCollisionsWithTiles() {
-	m_detectCollisionsWithTiles = true;
+void Body::detectCollisionsWithTiles(const bool collide) {
+	m_detectCollisionsWithTiles = collide;
 }
 
-void Body::detectCollisionsWithBodies() {
-	m_detectCollisionsWithBodies = true;
+void Body::detectCollisionsWithBodies(const bool collide) {
+	m_detectCollisionsWithBodies = collide;
 }
 
 const std::pair<Zeni::Point2f, Zeni::Point2f> Body::getBoundingBox() const {

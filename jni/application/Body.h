@@ -17,6 +17,10 @@ private:
 
 	double m_rotationRate; // Radians per second
 
+protected:
+	void setImage(const Zeni::String &image);
+	const Zeni::String getImage() const;
+
 public:
 	Body(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
 		 const Zeni::Vector2f &size = Zeni::Vector2f(32.0f, 32.0f),
@@ -38,8 +42,8 @@ public:
 	void setRotation(const double rotation);
 	void setRotationRate(const double rotationRate);
 
-	void detectCollisionsWithTiles();
-	void detectCollisionsWithBodies();
+	void detectCollisionsWithTiles(const bool collide = true);
+	void detectCollisionsWithBodies(const bool collide = true);
 	
 	const std::pair<Zeni::Point2f, Zeni::Point2f> getBoundingBox() const;
 	const std::list<Zeni::Point2f> getBoundingPoints() const;

@@ -3,6 +3,7 @@
 #include <zenilib.h>
 #include "Level.h"
 #include "Actor.h"
+#include "Player.h"
 #include "AIRaceCar.h"
 #include "Viewport.h"
 #include "Waypoint.h"
@@ -12,7 +13,7 @@ class PlayState : public Zeni::Gamestate_Base {
 	PlayState operator=(const PlayState &);
 
 public:
-	PlayState();
+	PlayState(std::vector<Player*> players);
 	
 	virtual ~PlayState();
 
@@ -22,9 +23,12 @@ private:
 	std::vector<Waypoint*> m_waypoints;
 	std::vector<Body*> m_trackedBodies;
 	std::vector<Player*> m_racers;
-	std::vector<Viewport> m_viewports;
+	std::vector<Viewport*> m_viewports;
 	Zeni::Chronometer<Zeni::Time> m_chronometer;
 	float m_timePassed;
+
+	int m_numRequiredLaps;
+	std::vector<int> m_finishedRacers;
 
 	const std::vector<std::vector<Body*>> getBodyCollisions(); ///< Get collisions between bodies, returns vector for each Body
 

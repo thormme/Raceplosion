@@ -25,7 +25,13 @@ HOWTO:  To convert between types, or to downmix to mono,
         (4) Go to File->Export As Ogg Vorbis
 -->
 <Sounds>
-  <hello_world>
-    <filepath>sfx/104469__dkmedic__world</filepath>
-  </hello_world>
+  <rocket_fire>
+    <filepath>sfx/rocket_fire</filepath>
+  </rocket_fire>
+  <tire_squeal>
+    <filepath>sfx/tire_squeal</filepath>
+  </tire_squeal>
+  <wall_bump>
+    <filepath>sfx/wall_bump</filepath>
+  </wall_bump>
 </Sounds>

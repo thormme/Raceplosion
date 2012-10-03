@@ -6,6 +6,8 @@
 #include "Input.h"
 #include "PlayState.h"
 #include "Rocket.h"
+#include "Mine.h"
+#include "Explosion.h"
 #include "Player.h"
 
 const Zeni::Vector2f RaceCar::getDirectionalVelocity(const double &direction) {
@@ -37,9 +39,57 @@ void RaceCar::setWheelRotation(double rotation) {
 }
 
 Rocket* RaceCar::fireRocket() {
-	Rocket * rocket = new Rocket(getCenter(), getRotation(), getDirectionalVelocity(getRotation()));
-	rocket->setPosition(rocket->getPosition() - rocket->getSize()/2.0f);
-	return rocket;
+	if (m_rockets.consume()) {
+		Rocket * rocket = new Rocket(this, getCenter(), getRotation(), getDirectionalVelocity(getRotation()));
+		rocket->setPosition(rocket->getPosition() - rocket->getSize()/2.0f);
+		return rocket;
+	} 
+	return nullptr;
+}
+
+Mine* RaceCar::layMine() {
+	if (m_mines.consume()) {
+		Mine * mine = new Mine(this, getCenter(), getRotation());
+		mine->setPosition(mine->getPosition() - mine->getSize()/2.0f);
+		return mine;
+	}
+	return nullptr;
+}
+
+void RaceCar::respawn() {
+	if (!getPassedWaypoints().empty() && m_respawning == false) {
+		m_respawning = true;
+		m_respawnTimer = m_timer;
+	}
+}
+
+void RaceCar::completeRespawn() {
+	if (!getPassedWaypoints().empty()) {
+		setVelocity(Zeni::Vector2f(0.0f, 0.0f));
+		setPosition(getPassedWaypoints().back()->getCenter());
+		setRotation(getPassedWaypoints().back()->getRotation() + Utils::PI/2.0);
+		m_health.refill();
+		m_rockets.refill();
+		m_jumps.refill();
+		m_mines.refill();
+		setImage(m_originalImage);
+	}
+	m_respawning = false;
+}
+
+void RaceCar::jump() {
+	if (m_jumping == false && m_jumps.consume()) {
+		m_jumping = true;
+		m_jumpTimer = m_timer;
+		detectCollisionsWithBodies(false);
+		detectCollisionsWithTiles(false);
+	}
+}
+
+void RaceCar::completeJump() {
+		m_jumping = false;
+		detectCollisionsWithBodies(true);
+		detectCollisionsWithTiles(true);
 }
 
 // Causes the actor to take an action.
@@ -47,6 +97,28 @@ const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, 
 	StateModifications stateModifications = StateModifications();
 	if (m_driver != nullptr) {
 		stateModifications.combine(m_driver->driveRaceCar(*this, tileCollisions, bodyCollisions));
+	}
+	for (std::vector<Body*>::const_iterator it = bodyCollisions.begin(); it != bodyCollisions.end(); it++) {
+		Explosion * explosion = dynamic_cast<Explosion*>(*it);
+		if (explosion != nullptr) {
+			stateModifications.bodyRemovals.push_back(explosion);
+			m_health.consume();
+		}
+	}
+	if (m_health.remaining <= 0) {
+		respawn();
+		setImage("race_car-destroyed");
+	}
+	if (m_respawning == true) {
+		setBraking(true);
+		if (m_timer - m_respawnTimer > 2) {
+			completeRespawn();
+		}
+	}
+	if (m_jumping == true) {
+		if (m_timer - m_jumpTimer > 1) {
+			completeJump();
+		}
 	}
 	return stateModifications;
 }
@@ -82,11 +154,13 @@ void RaceCar::stepPhysics(const double timeStep) {
 			setForce(getForce() + getDirectionalFrictionForce(getRotation(), m_rollingFriction));
 		}
 	}
+	m_timer += timeStep;
 	Actor::stepPhysics(timeStep);
 }
 
 void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies) {
 	m_traction = 0;
+	int numPits = 0;
 	for (int i=0; i < tiles.size(); i++) {
 		if (tiles[i]->isSolid()) {
 			// Hit a wall
@@ -106,6 +180,12 @@ void RaceCar::handleCollisions(const double timeStep, std::vector<Tile*> tiles, 
 		} else {
 			m_traction += 1.0;
 		}
+		if (tiles[i]->isPit()) {
+			numPits += 1;
+		}
+	}
+	if ((double)(numPits)/(double)(tiles.size()) > 0.55) {
+		m_health.consume(m_health.remaining);
 	}
 	if (tiles.size()) m_traction /= tiles.size();
 
@@ -139,6 +219,19 @@ void RaceCar::setLapCompleted() {
 	m_completedLaps++;
 }
 
+const RaceCar::Consumable RaceCar::getHealth() const {
+	return m_health;
+}
+const RaceCar::Consumable RaceCar::getRockets() const {
+	return m_rockets;
+}
+const RaceCar::Consumable RaceCar::getMines() const {
+	return m_mines;
+}
+const RaceCar::Consumable RaceCar::getJumps() const {
+	return m_jumps;
+}
+
 RaceCar::RaceCar(const Zeni::Point2f &position,
 		const double rotation,
 		const Zeni::String image)
@@ -147,10 +240,24 @@ RaceCar::RaceCar(const Zeni::Point2f &position,
 	m_engineForce = 200.0;
 	m_tireFriction = 1000.0;
 	m_rollingFriction = 50;
+	m_maximumWheelRotation = Utils::PI/8.0;
 	m_braking = false;
 	detectCollisionsWithBodies();
 	detectCollisionsWithTiles();
-	m_startPosition = getPosition();
 	m_completedLaps = 0;
 	m_driver = nullptr;
+	m_originalImage = getImage();
+
+	m_rockets.max = 8;
+	m_rockets.refill();
+	m_mines.max = 8;
+	m_mines.refill();
+	m_health.max = 20;
+	m_health.refill();
+	m_jumps.max = 3;
+	m_jumps.refill();
+
+	m_timer = 0;
+	m_respawning = false;
+	m_jumping = false;
 }

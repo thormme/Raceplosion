@@ -24,3 +24,7 @@ void Viewport::render(const Level &level, const std::vector<Body*> &bodies) cons
 		bodies[i]->render();
 	}
 }
+
+const Zeni::Vector2f Viewport::getWorldViewSize() const {
+	return m_worldViewSize;
+}

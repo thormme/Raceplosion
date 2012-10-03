@@ -5,7 +5,7 @@
 #include "Level.h"
 
 AIPlayer::AIPlayer() {
-	m_lookAheadTime = .175; // smaller = understeer, larger = oversteer
+	m_lookAheadTime = .175 + (double)(rand()%50 - 25)/1000.0; // smaller = understeer, larger = oversteer
 	m_directionSmoothing = 2;
 }
 
@@ -26,11 +26,11 @@ const StateModifications AIPlayer::driveRaceCar(RaceCar &raceCar, const std::vec
 	Level::waypoint = waypoint; // TODO: Remove or move/hide debug functionality
 	double suggestedDirection = m_navigationMaps[waypoint].getSuggestedDirectionAtPosition(raceCar.getCenter()+raceCar.getVelocity()*m_lookAheadTime, m_directionSmoothing);
 	double angleDifference = Utils::getAngleDifference(suggestedDirection, raceCar.getRotation());
-	if (angleDifference < -Utils::PI/6) {
-		angleDifference = -Utils::PI/6;
+	if (angleDifference < -raceCar.m_maximumWheelRotation) {
+		angleDifference = -raceCar.m_maximumWheelRotation;
 	}
-	if (angleDifference > Utils::PI/6) {
-		angleDifference = Utils::PI/6;
+	if (angleDifference > raceCar.m_maximumWheelRotation) {
+		angleDifference = raceCar.m_maximumWheelRotation;
 	}
 	raceCar.setWheelRotation(angleDifference);
 
@@ -46,6 +46,11 @@ const StateModifications AIPlayer::driveRaceCar(RaceCar &raceCar, const std::vec
 			stateModifications.tileChanges.push_back(newTile);
 		}
 	}*/
+
+	if (raceCar.getHealth().remaining == 0) {
+		raceCar.respawn();
+	}
+
 	return stateModifications;
 }
 
