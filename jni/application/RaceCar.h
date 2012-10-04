@@ -47,9 +47,12 @@ private:
 	double m_timer;
 	double m_respawnTimer;
 	double m_jumpTimer;
+	double m_jumpTimeLimit;
 	Zeni::String m_originalImage;
 	bool m_respawning;
 	bool m_jumping;
+
+	double m_tireSquealTimer;
 	
 	Consumable m_health;
 	Consumable m_rockets;
@@ -77,6 +80,8 @@ public:
 	RaceCar(const Zeni::Point2f &position = Zeni::Point2f(0.0f, 0.0f),
 		const double rotation = 0.0f,
 		const Zeni::String image = "race_car");
+
+	virtual void render();
 
 	virtual void stepPhysics(const double timeStep);
 	virtual void handleCollisions(const double timeStep, std::vector<Tile*>, std::vector<Body*>); ///< Run physics necessary to deal with collisions.

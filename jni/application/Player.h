@@ -25,6 +25,8 @@ public:
 
 	virtual const StateModifications driveRaceCar(RaceCar &raceCar, const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);
 
+	virtual void senseSurroundings(std::vector<Tile*> tiles, std::vector<Body*> bodies) {}
+
 private:
 	enum Controls {FORWARD = 0, BACKWARD, LEFT, RIGHT, FIRE_ROCKET, LAY_MINE, JUMP, RESPAWN, FINAL_ELEMENT};
 	// Player attributes

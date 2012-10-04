@@ -34,4 +34,7 @@ HOWTO:  To convert between types, or to downmix to mono,
   <wall_bump>
     <filepath>sfx/wall_bump</filepath>
   </wall_bump>
+  <mine_lay>
+    <filepath>sfx/mine_lay</filepath>
+  </mine_lay>
 </Sounds>

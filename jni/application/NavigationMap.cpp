@@ -10,10 +10,10 @@ NavigationMap::NavigationMap() {
 float getRewardFromTile(const Tile &tile) {
 	float reward = 0;
 	if (tile.isPit()) {
-		reward = -100;
+		reward = -200;
 	}
 	if (tile.isSolid()) {
-		reward = -100;
+		reward = -200;
 	}
 	return reward;
 }

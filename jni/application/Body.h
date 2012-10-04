@@ -31,7 +31,7 @@ public:
 		 const double &mass = 1.0);
 
 	
-	void render(); ///< Render the body.
+	virtual void render(); ///< Render the body.
 	
 	virtual void stepPhysics(const double timeStep); ///< Run the physics simulation on this object for one step.
 	virtual void handleCollisions(const double timeStep, std::vector<Tile*> tiles, std::vector<Body*> bodies); ///< Run physics necessary to deal with collisions.

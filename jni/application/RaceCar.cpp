@@ -42,6 +42,7 @@ Rocket* RaceCar::fireRocket() {
 	if (m_rockets.consume()) {
 		Rocket * rocket = new Rocket(this, getCenter(), getRotation(), getDirectionalVelocity(getRotation()));
 		rocket->setPosition(rocket->getPosition() - rocket->getSize()/2.0f);
+		Zeni::play_sound("rocket_fire");
 		return rocket;
 	} 
 	return nullptr;
@@ -51,6 +52,7 @@ Mine* RaceCar::layMine() {
 	if (m_mines.consume()) {
 		Mine * mine = new Mine(this, getCenter(), getRotation());
 		mine->setPosition(mine->getPosition() - mine->getSize()/2.0f);
+		Zeni::play_sound("mine_lay");
 		return mine;
 	}
 	return nullptr;
@@ -92,6 +94,17 @@ void RaceCar::completeJump() {
 		detectCollisionsWithTiles(true);
 }
 
+void RaceCar::render() {
+	if (m_jumping) {
+		float size = 64.0 - std::abs((m_timer - m_jumpTimer)/m_jumpTimeLimit - .5) * 64.0 * 2.0;
+		render_image(
+		  "shadow", // which texture to use
+		  getCenter() - Zeni::Vector2f(size, size), // upper-left corner
+		  getCenter() + Zeni::Vector2f(size, size)); // lower-right corner
+	}
+	Actor::render();
+}
+
 // Causes the actor to take an action.
 const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
 	StateModifications stateModifications = StateModifications();
@@ -116,7 +129,7 @@ const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, 
 		}
 	}
 	if (m_jumping == true) {
-		if (m_timer - m_jumpTimer > 1) {
+		if (m_timer - m_jumpTimer > m_jumpTimeLimit) {
 			completeJump();
 		}
 	}
@@ -148,6 +161,10 @@ void RaceCar::stepPhysics(const double timeStep) {
 		// Apply horizontal friction
 		if (getDirectionalVelocity(getRotation()+Utils::PI/2).magnitude() > 1) {
 			setForce(getForce() + getDirectionalFrictionForce(getRotation() + Utils::PI/2.0f, m_tireFriction));
+			if (m_timer - m_tireSquealTimer > 1.0 && getDirectionalVelocity(getRotation()+Utils::PI/2).magnitude() > 80) {
+				m_tireSquealTimer = m_timer;
+				//Zeni::play_sound("tire_squeal");
+			}
 		}
 		// Apply rolling friction
 		if (getDirectionalVelocity(getRotation()).magnitude() > 1) {
@@ -240,6 +257,7 @@ RaceCar::RaceCar(const Zeni::Point2f &position,
 	m_engineForce = 200.0;
 	m_tireFriction = 1000.0;
 	m_rollingFriction = 50;
+	m_jumpTimeLimit = 1.0;
 	m_maximumWheelRotation = Utils::PI/8.0;
 	m_braking = false;
 	detectCollisionsWithBodies();
@@ -250,14 +268,15 @@ RaceCar::RaceCar(const Zeni::Point2f &position,
 
 	m_rockets.max = 8;
 	m_rockets.refill();
-	m_mines.max = 8;
+	m_mines.max = 4;
 	m_mines.refill();
 	m_health.max = 20;
 	m_health.refill();
-	m_jumps.max = 3;
+	m_jumps.max = 1;
 	m_jumps.refill();
 
 	m_timer = 0;
+	m_tireSquealTimer = 0;
 	m_respawning = false;
 	m_jumping = false;
 }

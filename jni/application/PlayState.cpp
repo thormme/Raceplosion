@@ -9,10 +9,10 @@
 #include "Actor.h"
 #include "Input.h"
 #include "Utils.h"
+#include "Sensor.h"
+#include "Time.h"
 #include "RaceCarViewport.h"
 #include "RaceResultsState.h"
-
-using namespace Zeni;
 
 PlayState::PlayState(std::vector<Player*> players, const Zeni::String &level)
 	  : m_timePassed(0.0f),
@@ -83,7 +83,9 @@ void PlayState::loadLevel(Zeni::String fileName) {
 			RaceCar* car = player->getNewCar(Zeni::Point2f(x*32.0, y*32.0), rotation/180.0f*Utils::PI);
 			addBody(car);
 			AIPlayer * aiPlayer = dynamic_cast<AIPlayer*>(player);
-			if (aiPlayer == nullptr) {
+			if (aiPlayer != nullptr) {
+				addBody(new Sensor(aiPlayer, Zeni::Vector2f(800.0f, 800.0f)));
+			} else {
 				humanRaceCars.push_back(car);
 				m_trackedBodies.push_back(car);
 			}
@@ -200,10 +202,11 @@ void PlayState::perform_logic() {
 		Zeni::get_Game().push_state(new RaceResultsState(m_racers, m_finishedRacers));
 	}
 	
-	// Apply any bady/tile changes made by actors
+	// Apply any body/tile changes made by actors
 	applyStateModifications(stateModifications);
 
 	Input::stepInput();
+	Time::updateGameTime(timeStep);
 	static int counter = 0;
 	counter++;
 	// TODO: investigate dealing with path changes
@@ -212,14 +215,14 @@ void PlayState::perform_logic() {
 
 void PlayState::on_push() {
     //get_Window().mouse_grab(true);
-    get_Window().mouse_hide(true);
-    get_Game().joy_mouse.enabled = false;
+    Zeni::get_Window().mouse_hide(true);
+    Zeni::get_Game().joy_mouse.enabled = false;
 }
 
 void PlayState::on_pop() {
     //get_Window().mouse_grab(false);
-    get_Window().mouse_hide(false);
-    get_Game().joy_mouse.enabled = true;
+    Zeni::get_Window().mouse_hide(false);
+    Zeni::get_Game().joy_mouse.enabled = true;
 }
 
 void PlayState::on_key(const SDL_KeyboardEvent &event) {
