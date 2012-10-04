@@ -82,12 +82,11 @@ const StateModifications AIPlayer::driveRaceCar(RaceCar &raceCar, const std::vec
 void AIPlayer::senseSurroundings(std::vector<Tile*> tiles, std::vector<Body*> bodies) {
 	for (int i=0; i < bodies.size(); i++) {
 		RaceCar * car = dynamic_cast<RaceCar*>(bodies[i]);
-		if (Time::getGameTime() - m_rocketTimer > .3 &&
-			car != nullptr && 
+		if (car != nullptr && 
 			(car->getPosition() - getLastCar()->getPosition()).magnitude() > 100.0f) {
-			if (std::abs(Utils::getAngleDifference(Utils::getAngleFromVector(car->getCenter() - getLastCar()->getCenter()), getLastCar()->getRotation())) < Utils::PI/9.0) {
+			if (Time::getGameTime() - m_rocketTimer > .3 && std::abs(Utils::getAngleDifference(Utils::getAngleFromVector(car->getCenter() - getLastCar()->getCenter()), getLastCar()->getRotation())) < Utils::PI/9.0) {
 				m_fireRocket = true;
-			} else if (std::abs(Utils::getAngleDifference(Utils::getAngleFromVector(car->getCenter() - getLastCar()->getCenter()), getLastCar()->getRotation())) > 8.0*Utils::PI/9.0) {
+			} else if (Time::getGameTime() - m_mineTimer > .3 && std::abs(Utils::getAngleDifference(Utils::getAngleFromVector(car->getCenter() - getLastCar()->getCenter()), getLastCar()->getRotation())) > 8.0*Utils::PI/9.0) {
 				m_layMine = true;
 			}
 		}

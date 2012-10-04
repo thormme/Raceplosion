@@ -21,7 +21,7 @@ PlayState::PlayState(std::vector<Player*> players, const Zeni::String &level)
 	m_chronometer.start();
 	m_level = nullptr;
 	loadLevel("levels/" + level);
-	m_numRequiredLaps = 1;
+	m_numRequiredLaps = 3;
 }
 
 PlayState::~PlayState() {

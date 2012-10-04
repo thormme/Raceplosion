@@ -37,8 +37,8 @@ private:
 
     Zeni::Font &fr = get_Fonts()["system_36_800x600"];
 
-    fr.render_text("Instructions go here!",
-                   Point2f(400.0f, 300.0f - 0.5f * fr.get_text_height()),
+    fr.render_text("Arrow keys move\nQ fires rockets\nW fires jump jets\nE lays mines\nBackspace respawns",
+                   Point2f(400.0f, 200.0f - 0.5f * fr.get_text_height()),
                    get_Colors()["title_text"],
                    ZENI_CENTER);
   }

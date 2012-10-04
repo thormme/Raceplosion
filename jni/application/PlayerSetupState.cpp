@@ -95,6 +95,7 @@ PlayerSetupState::MapSelect::MapSelect(const Zeni::Point2f &upper_left_, const Z
 			
 	add_option("level1");
 	add_option("level2");
+	add_option("level3");
 
 	select_option("level1");
 	on_accept(get_selected());
