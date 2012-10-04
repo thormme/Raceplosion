@@ -59,7 +59,8 @@ Mine* RaceCar::layMine() {
 }
 
 void RaceCar::respawn() {
-	if (!getPassedWaypoints().empty() && m_respawning == false) {
+	if (m_respawning == false) {
+		setDisabled(true);
 		m_respawning = true;
 		m_respawnTimer = m_timer;
 	}
@@ -76,6 +77,7 @@ void RaceCar::completeRespawn() {
 		m_mines.refill();
 		setImage(m_originalImage);
 	}
+	setDisabled(false);
 	m_respawning = false;
 }
 
@@ -108,7 +110,7 @@ void RaceCar::render() {
 // Causes the actor to take an action.
 const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
 	StateModifications stateModifications = StateModifications();
-	if (m_driver != nullptr) {
+	if (m_driver != nullptr && !m_disabled) {
 		stateModifications.combine(m_driver->driveRaceCar(*this, tileCollisions, bodyCollisions));
 	}
 	for (std::vector<Body*>::const_iterator it = bodyCollisions.begin(); it != bodyCollisions.end(); it++) {
@@ -122,8 +124,11 @@ const StateModifications RaceCar::run(const std::vector<Tile*> &tileCollisions, 
 		respawn();
 		setImage("race_car-destroyed");
 	}
-	if (m_respawning == true) {
+	if (m_disabled == true) {
 		setBraking(true);
+		accelerate(0);
+	}
+	if (m_respawning == true) {
 		if (m_timer - m_respawnTimer > 2) {
 			completeRespawn();
 		}
@@ -236,6 +241,11 @@ void RaceCar::setLapCompleted() {
 	m_completedLaps++;
 }
 
+void RaceCar::setDisabled(bool disabled) {
+	m_disabled = disabled;
+	detectCollisionsWithBodies(!disabled);
+}
+
 const RaceCar::Consumable RaceCar::getHealth() const {
 	return m_health;
 }
@@ -279,4 +289,7 @@ RaceCar::RaceCar(const Zeni::Point2f &position,
 	m_tireSquealTimer = 0;
 	m_respawning = false;
 	m_jumping = false;
+	setDisabled(false);
+
+	respawn();
 }

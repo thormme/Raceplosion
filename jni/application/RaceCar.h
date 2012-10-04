@@ -51,6 +51,7 @@ private:
 	Zeni::String m_originalImage;
 	bool m_respawning;
 	bool m_jumping;
+	bool m_disabled;
 
 	double m_tireSquealTimer;
 	
@@ -90,6 +91,7 @@ public:
 	const std::vector<Waypoint*> getPassedWaypoints() const;
 
 	void setLapCompleted();
+	void setDisabled(bool disabled);
 
 	const Consumable getHealth() const;
 	const Consumable getRockets() const;

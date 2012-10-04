@@ -185,9 +185,7 @@ void PlayState::perform_logic() {
 		if (m_racers[i]->getLastCar()->getPassedWaypoints().size() == m_waypoints.size() && m_racers[i]->getLastCar()->isTouching(*m_waypoints[0])) {
 			m_racers[i]->getLastCar()->setLapCompleted();
 			if (m_racers[i]->getLastCar()->getCompletedLaps() == m_numRequiredLaps) {
-				m_racers[i]->getLastCar()->setVelocity(Zeni::Vector2f());
-				m_racers[i]->getLastCar()->setForce(Zeni::Vector2f());
-				m_racers[i]->getLastCar()->setActive(false);
+				m_racers[i]->getLastCar()->setDisabled(true);
 				m_finishedRacers.push_back(i);
 			}
 		}
