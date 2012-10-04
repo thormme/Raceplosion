@@ -57,7 +57,5 @@ private:
       Zeni::get_Game().pop_state();
   }
 
-  void render() {
-    Widget_Gamestate::render();
-  }
+  void render();
 };

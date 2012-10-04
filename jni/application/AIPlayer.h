@@ -19,10 +19,12 @@ private:
 	double m_mineTimer;
 	std::vector<NavigationMap> m_navigationMaps;
 
+	bool m_offensive;
+
 protected:
 
 public:
-	AIPlayer();
+	AIPlayer(bool offensive = true);
 
 	virtual const StateModifications driveRaceCar(RaceCar &raceCar, const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions);
 

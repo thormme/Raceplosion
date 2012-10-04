@@ -111,3 +111,14 @@ void PlayerSetupState::MapSelect::on_accept(const Zeni::String &option) {
 void PlayerSetupState::Play_Button::on_accept() {
 	Zeni::get_Game().push_state(new PlayState(players, level));
 }
+
+void PlayerSetupState::render() {
+    Widget_Gamestate::render();
+
+	Zeni::Vector2f carImageSize(100.0f, 50.0f);
+
+	for (int i=0; i < players.size(); i++) {
+		Zeni::Point2f carImagePosition(800.0f/(players.size())*i + 50.0f, 100.0f);
+		Zeni::render_image(players[i]->getCarImage(), carImagePosition, carImagePosition + carImageSize);
+	}
+}

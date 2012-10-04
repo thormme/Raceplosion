@@ -5,13 +5,14 @@
 #include "Level.h"
 #include "Time.h"
 
-AIPlayer::AIPlayer() {
+AIPlayer::AIPlayer(bool offensive) {
 	m_lookAheadTime = .175 + (double)(rand()%50 - 25)/1000.0; // smaller = understeer, larger = oversteer
 	m_directionSmoothing = 2;
 	m_fireRocket = false;
 	m_layMine = false;
 	m_rocketTimer = 0;
 	m_mineTimer = 0;
+	m_offensive = true;
 }
 
 const StateModifications AIPlayer::driveRaceCar(RaceCar &raceCar, const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {
@@ -47,7 +48,7 @@ const StateModifications AIPlayer::driveRaceCar(RaceCar &raceCar, const std::vec
 		}
 	}
 
-	if (m_fireRocket == true) {
+	if (m_offensive && m_fireRocket == true) {
 		m_rocketTimer = Time::getGameTime();
 		Body * rocket = raceCar.fireRocket();
 		if (rocket != nullptr) {
@@ -56,7 +57,7 @@ const StateModifications AIPlayer::driveRaceCar(RaceCar &raceCar, const std::vec
 		m_fireRocket = false;
 	}
 
-	if (m_layMine == true) {
+	if (m_offensive && m_layMine == true) {
 		m_mineTimer = Time::getGameTime();
 		Body * mine = raceCar.layMine();
 		if (mine != nullptr) {
