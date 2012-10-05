@@ -81,6 +81,6 @@ void RaceCarViewport::render(const Level &level, const std::vector<Body*> &bodie
 	Zeni::get_Fonts()["silkscreen_normal"].render_text(Zeni::String(str.str()), Zeni::Point2f(mineX + 32, -6) + hudPosition, Zeni::Color(0xFFFFFFFF));
 
 	str.str("");
-	str << "Lap " << m_raceCar->getCompletedLaps();
+	str << "Laps: " << m_raceCar->getCompletedLaps();
 	Zeni::get_Fonts()["silkscreen_normal"].render_text(Zeni::String(str.str()), Zeni::Point2f(0, -6), Zeni::Color(0xFFFFFFFF));
 }

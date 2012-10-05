@@ -235,6 +235,7 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
     <ClInclude Include="..\..\jni\application\Sensor.h" />
     <ClInclude Include="..\..\jni\application\Tile.h" />
     <ClInclude Include="..\..\jni\application\Time.h" />
+    <ClInclude Include="..\..\jni\application\UserData.h" />
     <ClInclude Include="..\..\jni\application\Utils.h" />
     <ClInclude Include="..\..\jni\application\Viewport.h" />
     <ClInclude Include="..\..\jni\application\Waypoint.h" />
@@ -373,6 +374,7 @@ xcopy ..\..\jni\external\bin\x64 ..\..\bin\x64 /E /Y</Command>
     <ClCompile Include="..\..\jni\application\Sensor.cpp" />
     <ClCompile Include="..\..\jni\application\Tile.cpp" />
     <ClCompile Include="..\..\jni\application\Time.cpp" />
+    <ClCompile Include="..\..\jni\application\UserData.cpp" />
     <ClCompile Include="..\..\jni\application\Utils.cpp" />
     <ClCompile Include="..\..\jni\application\Viewport.cpp" />
     <ClCompile Include="..\..\jni\application\Waypoint.cpp" />

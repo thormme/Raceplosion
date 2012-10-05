@@ -19,6 +19,7 @@ public:
 
 private:
 	Level* m_level;
+	Zeni::String m_levelName;
 	std::vector<Body*> m_bodies;
 	std::vector<Waypoint*> m_waypoints;
 	std::vector<Body*> m_trackedBodies;

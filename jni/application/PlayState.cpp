@@ -20,7 +20,7 @@ PlayState::PlayState(std::vector<Player*> players, const Zeni::String &level)
     set_pausable(true);
 	m_chronometer.start();
 	m_level = nullptr;
-	loadLevel("levels/" + level);
+	loadLevel(level);
 	m_numRequiredLaps = 3;
 }
 
@@ -54,14 +54,16 @@ void PlayState::removeBody(Body * body) {
 
 void PlayState::loadLevel(Zeni::String fileName) {
 	if (m_level != nullptr) delete m_level;
-	m_level = new Level(fileName);
+	Zeni::String filePath = "levels/" + fileName;
+	m_level = new Level(filePath);
+	m_levelName = fileName;
 
 	while (!m_bodies.empty()) {
 		removeBody(m_bodies[0]);
 	}
 
 	Zeni::String fileData;
-	Zeni::File_Ops::load_asset(fileData, fileName + ".entities");
+	Zeni::File_Ops::load_asset(fileData, filePath + ".entities");
 	std::string s = "";
 	for (int i=0; i<fileData.size(); i++) {
 		if (fileData[i] != '\r') {
@@ -135,6 +137,7 @@ void PlayState::applyStateModifications(StateModifications &stateModifications) 
 }
 
 const std::vector<std::vector<Body*>> PlayState::getBodyCollisions() {
+	// TODO: not checking that second body is detecting collisions, bug fixes issue where players can jump over waypoints.
 	std::vector<std::vector<Body*>> collisions(m_bodies.size());
 	for (int i = 0; i < m_bodies.size(); i++) {
 		if (m_bodies[i]->willDetectCollisionsWithBodies()) {
@@ -197,7 +200,7 @@ void PlayState::perform_logic() {
 			}
 		}
 		Zeni::get_Game().pop_state();
-		Zeni::get_Game().push_state(new RaceResultsState(m_racers, m_finishedRacers));
+		Zeni::get_Game().push_state(new RaceResultsState(m_racers, m_finishedRacers, m_levelName));
 	}
 	
 	// Apply any body/tile changes made by actors

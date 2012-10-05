@@ -1,5 +1,6 @@
 #include <zenilib.h>
 #include "RaceResultsState.h"
+#include "AIPlayer.h"
 #include <sstream>
 
 void RaceResultsState::render() {
@@ -30,4 +31,30 @@ void RaceResultsState::render() {
 
 		Zeni::render_image(m_players[m_finishOrderedPlayers[i]]->getCarImage(), carImagePosition, carImagePosition + carImageSize);
 	}
+
+	if (m_finishPlace >= 0 && m_finishPlace <= 3) {
+		Zeni::String image = "placeholder";
+		if (m_finishPlace == 0) {
+			image = "trophy-gold";
+		} else if (m_finishPlace == 1) {
+			image = "trophy-silver";
+		} else if (m_finishPlace == 2) {
+			image = "trophy-bronze";
+		}
+		Zeni::render_image(image, Zeni::Point2f(350.0f, 250.0f), Zeni::Point2f(450.0f, 350.0f));
+	}
+}
+
+RaceResultsState::RaceResultsState(std::vector<Player*> players, std::vector<int> finishOrderedPlayers, Zeni::String mapName)
+	: Widget_Gamestate(std::make_pair(Zeni::Point2f(0.0f, 0.0f), Zeni::Point2f(800.0f, 600.0f))),
+	m_players(players), m_finishOrderedPlayers(finishOrderedPlayers), m_finishPlace(-1) {
+		
+	for (int i=0; i < m_finishOrderedPlayers.size(); i++) {
+		AIPlayer * aiPlayer = dynamic_cast<AIPlayer*>(m_players[m_finishOrderedPlayers[i]]);
+		if (aiPlayer == nullptr && i < 3) {
+			m_finishPlace = i;
+			break;
+		}
+	}
+	UserData::setBestPosition(mapName.std_str(), m_finishPlace);
 }

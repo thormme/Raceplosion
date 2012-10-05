@@ -1,5 +1,6 @@
 #include <zenilib.h>
 #include "Player.h"
+#include "UserData.h"
 
 class RaceResultsState : public Zeni::Widget_Gamestate {
 	RaceResultsState(const RaceResultsState &);
@@ -8,11 +9,10 @@ class RaceResultsState : public Zeni::Widget_Gamestate {
 	std::vector<Player*> m_players;
 	std::vector<int> m_finishOrderedPlayers;
 
+	int m_finishPlace;
+
 public:
-	RaceResultsState(std::vector<Player*> players, std::vector<int> finishOrderedPlayers)
-		: Widget_Gamestate(std::make_pair(Zeni::Point2f(0.0f, 0.0f), Zeni::Point2f(800.0f, 600.0f))),
-		m_players(players), m_finishOrderedPlayers(finishOrderedPlayers) {
-  }
+	RaceResultsState(std::vector<Player*> players, std::vector<int> finishOrderedPlayers, Zeni::String mapName);
 
 private:
 

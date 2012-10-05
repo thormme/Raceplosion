@@ -12,7 +12,7 @@ AIPlayer::AIPlayer(bool offensive) {
 	m_layMine = false;
 	m_rocketTimer = 0;
 	m_mineTimer = 0;
-	m_offensive = true;
+	m_offensive = offensive;
 }
 
 const StateModifications AIPlayer::driveRaceCar(RaceCar &raceCar, const std::vector<Tile*> &tileCollisions, const std::vector<Body*> &bodyCollisions) {

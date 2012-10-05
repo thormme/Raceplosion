@@ -35,12 +35,33 @@ private:
   void render() {
     Widget_Gamestate::render();
 
-    Zeni::Font &fr = get_Fonts()["system_36_800x600"];
+    Zeni::Font &fr = get_Fonts()["system_26_800x600"];
 
-    fr.render_text("Arrow keys move\nQ fires rockets\nW fires jump jets\nE lays mines\nBackspace respawns",
-                   Point2f(400.0f, 200.0f - 0.5f * fr.get_text_height()),
+    fr.render_text("Welcome to raceplosion, a game where you try to cross the\n\
+					finish line before your opponents.\n\
+					To do this you must employ all your driving skills and gadgets.\n\
+					Gadgets include:\n\
+					\n\
+					Jump Jets:\n\
+					These allow you to jump over pits and wall, be careful not to\n\
+					jump off the track though!\n\
+					\n\
+					Missiles:\n\
+					Shoot these at your enemies to hurt and destroy them.\n\
+					They are also good for destroying walls.\n\
+					\n\
+					Mines:\n\
+					Lay these on the track to damage those behind you.\n\
+					\n\
+					If you are destroyed you will respawn at the last waypoint in 2 seconds.\n\
+					You may respawn at any time by hitting the respawn key.\n\
+					Respawning refills all weapon/jump charges.\n\
+					\n\
+					Escape/Start will alow you to return from any screen.\n\
+					Try to get gold on all of the tracks, good luck!",
+                   Point2f(10.0f, 25.0f - 0.5f * fr.get_text_height()),
                    get_Colors()["title_text"],
-                   ZENI_CENTER);
+                   ZENI_LEFT);
   }
 };
 
