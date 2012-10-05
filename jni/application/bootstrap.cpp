@@ -43,7 +43,7 @@ private:
 					Gadgets include:\n\
 					\n\
 					Jump Jets:\n\
-					These allow you to jump over pits and wall, be careful not to\n\
+					These allow you to jump over pits and walls, be careful not to\n\
 					jump off the track though!\n\
 					\n\
 					Missiles:\n\
@@ -57,7 +57,7 @@ private:
 					You may respawn at any time by hitting the respawn key.\n\
 					Respawning refills all weapon/jump charges.\n\
 					\n\
-					Escape/Start will alow you to return from any screen.\n\
+					Escape/Start will allow you to return from any screen.\n\
 					Try to get gold on all of the tracks, good luck!",
                    Point2f(10.0f, 25.0f - 0.5f * fr.get_text_height()),
                    get_Colors()["title_text"],

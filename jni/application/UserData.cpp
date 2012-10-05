@@ -5,7 +5,7 @@
 	
 void UserData::setBestPosition(std::string mapName, int position) {
 	int previousPosition = getBestPosition(mapName);
-	if (previousPosition >= 0 && position > previousPosition) {
+	if ((previousPosition >= 0 && position > previousPosition) || position < 0) {
 		return;
 	}
 	std::map<std::string, int> positions;
