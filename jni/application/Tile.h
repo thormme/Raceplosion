@@ -24,8 +24,8 @@ public:
 	const Zeni::String getType() const;
 	const long getImageId() const;
 
-	const bool Tile::isSolid() const;
-	const bool Tile::isPit() const;
-	const bool Tile::isFloating() const;
+	const bool isSolid() const;
+	const bool isPit() const;
+	const bool isFloating() const;
 };
 #endif

@@ -34,19 +34,19 @@ void Player::setControls(int joyIndex) {
 		m_controls[BACKWARD] = InputAction(joyIndex, Zeni::Joysticks::AXIS_LEFT_TRIGGER, 0, 0);
 		m_controls[LEFT] = InputAction(joyIndex, Zeni::Joysticks::AXIS_LEFT_THUMB_X, -0.25, 2.0);
 		m_controls[RIGHT] = InputAction(joyIndex, Zeni::Joysticks::AXIS_LEFT_THUMB_X, -2.0, 0.25);
-		m_controls[FIRE_ROCKET] = InputAction(joyIndex, Zeni::Joysticks::BUTTON_X, InputAction::ButtonState::PRESSED);
-		m_controls[LAY_MINE] = InputAction(joyIndex, Zeni::Joysticks::BUTTON_B, InputAction::ButtonState::PRESSED);
-		m_controls[RESPAWN] = InputAction(joyIndex, Zeni::Joysticks::BUTTON_BACK, InputAction::ButtonState::PRESSED);
-		m_controls[JUMP] = InputAction(joyIndex, Zeni::Joysticks::BUTTON_Y, InputAction::ButtonState::PRESSED);
+		m_controls[FIRE_ROCKET] = InputAction(joyIndex, Zeni::Joysticks::BUTTON_X, InputAction::PRESSED);
+		m_controls[LAY_MINE] = InputAction(joyIndex, Zeni::Joysticks::BUTTON_B, InputAction::PRESSED);
+		m_controls[RESPAWN] = InputAction(joyIndex, Zeni::Joysticks::BUTTON_BACK, InputAction::PRESSED);
+		m_controls[JUMP] = InputAction(joyIndex, Zeni::Joysticks::BUTTON_Y, InputAction::PRESSED);
 	}  else {
 		m_controls[FORWARD] = InputAction(SDLK_UP);
 		m_controls[BACKWARD] = InputAction(SDLK_DOWN);
 		m_controls[LEFT] = InputAction(SDLK_LEFT);
 		m_controls[RIGHT] = InputAction(SDLK_RIGHT);
-		m_controls[FIRE_ROCKET] = InputAction(SDLK_q, InputAction::ButtonState::PRESSED);
-		m_controls[LAY_MINE] = InputAction(SDLK_e, InputAction::ButtonState::PRESSED);
-		m_controls[RESPAWN] = InputAction(SDLK_BACKSPACE, InputAction::ButtonState::PRESSED);
-		m_controls[JUMP] = InputAction(SDLK_w, InputAction::ButtonState::PRESSED);
+		m_controls[FIRE_ROCKET] = InputAction(SDLK_q, InputAction::PRESSED);
+		m_controls[LAY_MINE] = InputAction(SDLK_e, InputAction::PRESSED);
+		m_controls[RESPAWN] = InputAction(SDLK_BACKSPACE, InputAction::PRESSED);
+		m_controls[JUMP] = InputAction(SDLK_w, InputAction::PRESSED);
 	}
 }
 

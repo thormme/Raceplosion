@@ -18,7 +18,7 @@ float getRewardFromTile(const Tile &tile) {
 	return reward;
 }
 
-NavigationMap::NavigationMap(const std::vector<std::vector<Tile*>> &tiles, const Zeni::Vector2f &stateSize, const std::vector<Zeni::Point2f> &goals) {
+NavigationMap::NavigationMap(const std::vector< std::vector<Tile*> > &tiles, const Zeni::Vector2f &stateSize, const std::vector<Zeni::Point2f> &goals) {
 	for (int i=0; i < tiles.size(); i++) {
 		std::vector<float> rewardsRow;
 		for (int j=0; j < tiles[i].size(); j++) {
@@ -37,7 +37,7 @@ NavigationMap::NavigationMap(const std::vector<std::vector<Tile*>> &tiles, const
 }
 
 void NavigationMap::iterateValues() {
-	std::vector<std::vector<float>> startingValues(m_values.begin(), m_values.end());
+	std::vector< std::vector<float> > startingValues(m_values.begin(), m_values.end());
 	double discount = .999;
 	for (int i=1; i < m_values.size() - 1; i++) {
 		for (int j=1; j < m_values[i].size() - 1; j++) {

@@ -87,7 +87,7 @@ void Level::setTile(const Tile &tile) {
 void Level::render(Zeni::Point2f offset, Zeni::Vector2f screenSize) const{
 	Zeni::Video &vr = Zeni::get_Video();
 	Zeni::Vector2f tileScreenEdge((int)((screenSize.x + offset.x)/m_tileSize.i) + 1, (int)((screenSize.y + offset.y)/m_tileSize.j) + 1);
-	std::vector<std::vector<Tile*>> tileVectors;
+	std::vector<std::vector< Tile*> > tileVectors;
 	for (int i=0; i < m_numTextures; i++) {
 		std::vector<Tile*> tiles;
 		tileVectors.push_back(tiles);

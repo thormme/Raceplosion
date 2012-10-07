@@ -60,7 +60,7 @@ private:
 	Consumable m_mines;
 	Consumable m_jumps;
 
-	const Zeni::Vector2f RaceCar::getDirectionalFrictionForce(const double &direction, const double &friction);
+	const Zeni::Vector2f getDirectionalFrictionForce(const double &direction, const double &friction);
 	const Zeni::Vector2f getDirectionalVelocity(const double &direction);
 	void completeRespawn();
 	void completeJump();

@@ -31,7 +31,7 @@ private:
 	int m_numRequiredLaps;
 	std::vector<int> m_finishedRacers;
 
-	const std::vector<std::vector<Body*>> getBodyCollisions(); ///< Get collisions between bodies, returns vector for each Body
+	const std::vector< std::vector<Body*> > getBodyCollisions(); ///< Get collisions between bodies, returns vector for each Body
 
 	void addBody(Body * body); ///< Add a body to the world.
 

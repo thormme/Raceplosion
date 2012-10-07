@@ -136,9 +136,9 @@ void PlayState::applyStateModifications(StateModifications &stateModifications) 
 	}
 }
 
-const std::vector<std::vector<Body*>> PlayState::getBodyCollisions() {
+const std::vector< std::vector<Body*> > PlayState::getBodyCollisions() {
 	// TODO: not checking that second body is detecting collisions, bug fixes issue where players can jump over waypoints.
-	std::vector<std::vector<Body*>> collisions(m_bodies.size());
+	std::vector< std::vector<Body*> > collisions(m_bodies.size());
 	for (int i = 0; i < m_bodies.size(); i++) {
 		if (m_bodies[i]->willDetectCollisionsWithBodies()) {
 			for (int j = i + 1; j < m_bodies.size(); j++) {
@@ -165,7 +165,7 @@ void PlayState::perform_logic() {
 	}
 
 	// Handle collisions and have actors act
-	std::vector<std::vector<Body*>> bodyCollisions = getBodyCollisions();
+	std::vector< std::vector<Body*> > bodyCollisions = getBodyCollisions();
     for (int i=0; i < m_bodies.size(); i++) {
 		std::vector<Tile*> tileCollisions;
 		if (m_bodies[i]->willDetectCollisionsWithTiles()) tileCollisions = m_level->getCollidingTiles(*m_bodies[i]);

@@ -6,14 +6,14 @@
 class NavigationMap {
 	
 private:
-	std::vector<std::vector<float>> m_rewards;
-	std::vector<std::vector<float>> m_values;
+	std::vector< std::vector<float> > m_rewards;
+	std::vector< std::vector<float> > m_values;
 
 	Zeni::Vector2f m_stateSize;
 
 public:
 	NavigationMap();
-	NavigationMap(const std::vector<std::vector<Tile*>> &tiles, const Zeni::Vector2f &stateSize, const std::vector<Zeni::Point2f> &goals);
+	NavigationMap(const std::vector< std::vector<Tile*> > &tiles, const Zeni::Vector2f &stateSize, const std::vector<Zeni::Point2f> &goals);
 
 	void iterateValues();
 

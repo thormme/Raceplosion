@@ -14,7 +14,7 @@ namespace Utils {
 	void printDebugMessage(T message) {
 		std::ostringstream str;
 		str << message;
-		OutputDebugString(str.str().c_str());
+		//OutputDebugString(str.str().c_str());
 	}
 }
 #endif
